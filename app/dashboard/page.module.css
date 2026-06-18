@@ -1,0 +1,24 @@
+.title {
+  font-size: var(--font-headline-small-font-size);
+  margin-bottom: 1.5rem;
+  color: var(--color-on-surface);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.label {
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+  margin: 0 0 0.5rem;
+}
+
+.value {
+  font-size: var(--font-headline-medium-font-size);
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin: 0;
+}

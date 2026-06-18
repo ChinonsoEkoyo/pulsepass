@@ -1,0 +1,46 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-outline-variant);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.logo {
+  font-size: var(--font-title-large-font-size);
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navLink {
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  color: var(--color-on-surface);
+  text-decoration: none;
+  font-size: var(--font-body-medium-font-size);
+  transition: background-color 0.2s;
+}
+
+.navLink:hover {
+  background-color: var(--color-surface-container-high);
+}
+
+.main {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--color-surface-container-low);
+}

@@ -1,0 +1,22 @@
+# PulsePass Architecture Rules
+
+- **Frontend**: Next.js (App Router), TypeScript, Vanilla CSS (CSS Modules), Custom UI Components. Do not use Tailwind CSS or Shadcn UI.
+- **Folder Structure**:
+  - `app/` — Next.js App Router pages and API routes
+  - `app/api/` — API route handlers
+  - `app/_actions/` — Server Actions
+  - `components/` — Reusable UI components
+  - `db/` — Database configuration
+  - `db/schema/` — Drizzle schema definitions
+  - `db/migrations/` — Auto-generated migration files
+  - `lib/` — Utility functions, shared helpers
+  - `hooks/` — Custom React hooks
+  - `types/` — Shared TypeScript types
+- **Backend**: Postgres database hosted on Neon. Connect via Drizzle ORM.
+- **Data Access**: All database queries go through Drizzle (`db.select()`, `db.insert()`, etc.). Never write raw SQL strings.
+- **State Management**: Use React `useState`/`useReducer` for local state, React Context for shared UI state (auth, theme). Avoid external state management libraries.
+- **Server vs Client**:
+  - Server Components by default; add `"use client"` only when interactivity, hooks, or browser APIs are required.
+  - API routes remain server-side (never import client modules).
+- **Payments**: Flutterwave exclusively. Server-side API calls use `FLUTTERWAVE_SECRET_KEY`. Never expose secrets to the client.
+- **Hosting**: Vercel. Leverage Vercel's Edge Functions for lightweight API routes where appropriate.
