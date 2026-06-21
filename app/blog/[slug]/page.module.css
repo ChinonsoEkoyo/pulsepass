@@ -1,0 +1,148 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--color-outline-variant);
+}
+
+.logoLink {
+  display: flex;
+  text-decoration: none;
+}
+
+.logoDesktop {
+  width: auto;
+  height: 2rem;
+}
+
+.logoMobile {
+  display: none;
+  width: auto;
+  height: 2rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navLink {
+  color: var(--color-on-surface);
+  text-decoration: none;
+  font-size: var(--font-body-medium-font-size);
+}
+
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: var(--font-body-medium-font-size);
+  margin-bottom: 2rem;
+  transition: gap 0.2s;
+}
+
+.backLink:hover {
+  gap: 0.75rem;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  background-color: var(--color-outline-variant);
+}
+
+.bannerImage {
+  object-fit: cover;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  border-radius: 999px;
+  font-size: var(--font-body-small-font-size);
+}
+
+.date {
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+}
+
+.author {
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.title {
+  font-size: var(--font-display-small-font-size);
+  color: #242565;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.body {
+  font-size: var(--font-body-large-font-size);
+  color: var(--color-on-surface);
+  line-height: 1.8;
+}
+
+.body p {
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .logoDesktop {
+    display: none;
+  }
+
+  .logoMobile {
+    display: block;
+  }
+
+  .main {
+    padding: 1.5rem 1rem;
+  }
+
+  .title {
+    font-size: var(--font-headline-medium-font-size);
+  }
+}

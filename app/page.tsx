@@ -1,8 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronDown, CalendarDays } from "lucide-react";
+import { db } from "@/db";
+import { blogPosts } from "@/data/blog-posts";
 import styles from "./page.module.css";
 
-export default function Home() {
+async function getEvents() {
+  return db.event.findMany({
+    where: { status: "PUBLISHED" },
+    include: { ticketTypes: true },
+    orderBy: { dateTime: "asc" },
+    take: 6,
+  });
+}
+
+export default async function Home() {
+  const events = await getEvents();
+
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
@@ -16,14 +30,24 @@ export default function Home() {
         <div className={styles.heroGradient} />
 
         <header className={styles.header}>
-          <Image
-            src="/images/Pulsepass-white-logo.png"
-            alt="PulsePass"
-            width={100}
-            height={25}
-            className={styles.logo}
-            priority
-          />
+          <Link href="/" className={styles.logoLink}>
+            <Image
+              src="/images/Pulsepass-white-logo.png"
+              alt="PulsePass"
+              width={100}
+              height={25}
+              className={styles.logoDesktop}
+              priority
+            />
+            <Image
+              src="/images/small-logo-white.png"
+              alt="PulsePass"
+              width={32}
+              height={32}
+              className={styles.logoMobile}
+              priority
+            />
+          </Link>
           <nav className={styles.nav}>
             <Link href="/events" className={styles.navLink}>Events</Link>
             <Link href="/login" className={styles.navLink}>Sign In</Link>
@@ -33,42 +57,186 @@ export default function Home() {
 
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            The event infrastructure platform for Africa
+            The event infrastructure<br />platform for Africa
           </h1>
           <p className={styles.heroSubtitle}>
             Create, manage, and monetize events with seamless ticketing, payments, and check-in.
           </p>
           <div className={styles.heroActions}>
             <Link href="/register" className={styles.primaryButton}>Get Started</Link>
-            <Link href="/events" className={styles.secondaryButton}>Browse Events</Link>
+            <Link href="/events" className={styles.secondaryButton}>Learn More</Link>
           </div>
         </div>
       </section>
 
-      <section className={styles.features}>
-        <h2 className={styles.sectionTitle}>Everything you need to run events</h2>
-        <div className={styles.featureGrid}>
-          <div className={styles.feature}>
-            <h3>Event Creation</h3>
-            <p>Build beautiful event pages in minutes with our simple creation wizard.</p>
+      <form action="/events" className={styles.searchContainer}>
+        <div className={styles.searchField}>
+          <label className={styles.searchLabel}>Search Event</label>
+          <input type="text" name="search" placeholder="Search events..." className={styles.searchInput} />
+        </div>
+        <div className={styles.searchField}>
+          <label className={styles.searchLabel}>Location</label>
+          <input type="text" name="location" placeholder="Location..." className={styles.searchInput} />
+        </div>
+        <div className={styles.searchField}>
+          <label className={styles.searchLabel}>Date</label>
+          <div className={styles.dateWrapper}>
+            <input type="date" name="date" className={styles.searchInput} />
+            <CalendarDays size={18} className={styles.calendarIcon} />
           </div>
-          <div className={styles.feature}>
-            <h3>Secure Payments</h3>
-            <p>Accept payments via Flutterwave with instant confirmation.</p>
+        </div>
+      </form>
+
+      <section className={styles.upcoming}>
+        <div className={styles.upcomingHeader}>
+          <h2 className={styles.upcomingTitle}>Upcoming Events</h2>
+          <div className={styles.upcomingFilters}>
+            <button className={styles.filterButton}>
+              Event type
+              <ChevronDown size={14} />
+            </button>
+            <button className={styles.filterButton}>
+              Category
+              <ChevronDown size={14} />
+            </button>
           </div>
-          <div className={styles.feature}>
-            <h3>QR Check-In</h3>
-            <p>Validate tickets instantly with QR scanning.</p>
+        </div>
+
+        <div className={styles.eventGrid}>
+          {events.map((event) => (
+            <Link key={event.id} href={`/events/${event.id}`} className={styles.eventCard}>
+              <div className={styles.eventCardBody}>
+                <h3 className={styles.eventCardTitle}>{event.title}</h3>
+                <p className={styles.eventCardVenue}>{event.venue}</p>
+                <p className={styles.eventCardDate}>
+                  {new Date(event.dateTime).toLocaleDateString("en-US", {
+                    weekday: "short", month: "long", day: "numeric", year: "numeric",
+                  })}
+                </p>
+                <p className={styles.eventCardDesc}>{event.description}</p>
+              </div>
+              <div className={styles.eventCardFooter}>
+                <span className={styles.eventPrice}>
+                  {event.ticketTypes.length > 0
+                    ? `From ₦${Math.min(...event.ticketTypes.map((t) => Number(t.price)))}`
+                    : "Free"}
+                </span>
+                <span className={styles.eventCategory}>{event.category}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className={styles.loadMoreWrapper}>
+          <Link href="/events" className={styles.loadMoreButton}>Load More</Link>
+        </div>
+      </section>
+
+      <section className={styles.illustrationSection}>
+        <div className={styles.illustrationContainer}>
+          <div className={styles.illustrationBadge}>
+            <Image
+              src="/images/ilustration.png"
+              alt=""
+              width={280}
+              height={280}
+              className={styles.illustrationImage}
+            />
           </div>
-          <div className={styles.feature}>
-            <h3>Real-time Analytics</h3>
-            <p>Track sales, attendance, and revenue in real-time.</p>
+          <div className={styles.illustrationContent}>
+            <h2 className={styles.illustrationTitle}>Make your own Event</h2>
+            <p className={styles.illustrationDesc}>
+              Set up ticketing, manage attendees and<br />collect payments seamlessly.
+            </p>
+            <Link href="/register" className={styles.illustrationButton}>Create Events</Link>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.blogSection}>
+        <h2 className={styles.blogSectionTitle}>Our Blog</h2>
+        <div className={styles.blogGrid}>
+          {blogPosts.slice(0, 3).map((post) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`} className={styles.blogCard}>
+              <div className={styles.blogCardImage}>
+                <Image src={post.image} alt={post.title} fill sizes="(max-width: 768px) 100vw, 340px" />
+              </div>
+              <div className={styles.blogCardBody}>
+                <h3 className={styles.blogCardTitle}>{post.title}</h3>
+                <p className={styles.blogCardDesc}>{post.description}</p>
+                <div className={styles.blogCardFooter}>
+                  <span className={styles.blogDate}>{post.date}</span>
+                  <span className={styles.blogAuthor}>{post.author}</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className={styles.blogLoadMore}>
+          <Link href="/blog" className={styles.blogLoadMoreButton}>Load More</Link>
         </div>
       </section>
 
       <footer className={styles.footer}>
-        <p>&copy; {new Date().getFullYear()} PulsePass. All rights reserved.</p>
+        <div className={styles.footerGrid}>
+          <div className={styles.footerCol}>
+            <Image
+              src="/images/Pulsepass-white-logo.png"
+              alt="PulsePass"
+              width={170.7}
+              height={28.7}
+              className={styles.footerLogo}
+            />
+            <p className={styles.footerDesc}>
+              PulsePass is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+            </p>
+            <div className={styles.socialRow}>
+              <a href="#" className={styles.socialIcon}>
+                <Image src="/images/facebook.png" alt="Facebook" width={32} height={32} />
+              </a>
+              <a href="#" className={styles.socialIcon}>
+                <Image src="/images/x-twitter-logo.png" alt="X/Twitter" width={32} height={32} />
+              </a>
+              <a href="#" className={styles.socialIcon}>
+                <Image src="/images/linkedin.png" alt="LinkedIn" width={32} height={32} />
+              </a>
+            </div>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerTitle}>Plan Events</h4>
+            <nav className={styles.footerLinks}>
+              <Link href="#">Create and Set Up</Link>
+              <Link href="#">Sell Tickets</Link>
+              <Link href="#">Online RSVP</Link>
+              <Link href="#">Online Events</Link>
+            </nav>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerTitle}>PulsePass</h4>
+            <nav className={styles.footerLinks}>
+              <Link href="/about">About Us</Link>
+              <Link href="/how-it-works">How it Works</Link>
+              <Link href="/blog">Blog</Link>
+              <Link href="/contact">Contact Us</Link>
+              <Link href="/help">Help Center</Link>
+              <Link href="/terms">Terms & Conditions</Link>
+              <Link href="/privacy">Privacy Policy</Link>
+            </nav>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerTitle}>Stay In The Loop</h4>
+            <p className={styles.footerNews}>
+              Join our mailing list to stay in the loop with our newest for Event and concert
+            </p>
+            <form className={styles.subscribeForm}>
+              <input type="email" placeholder="Enter your email address.." className={styles.subscribeInput} required />
+              <button type="submit" className={styles.subscribeButton}>Subscribe Now</button>
+            </form>
+          </div>
+        </div>
+        <div className={styles.footerBottom}>
+          <p>Copyright &copy; 2026 PulsePass</p>
+        </div>
       </footer>
     </div>
   );

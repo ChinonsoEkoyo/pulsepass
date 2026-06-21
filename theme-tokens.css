@@ -37,6 +37,12 @@
   --color-surface-container-high: hsl(300, 14%, 91%);
   --color-surface-container-highest: hsl(290, 11%, 89%);
 
+  /* === Custom Surface Colors === */
+  --color-surface-search: #261F8E;
+  --color-upcoming-title: #242565;
+  --color-filter-bg: #F2F4FF;
+  --color-illustration-bg: #EEE1FF;
+
   /* === Design Tokens (Typography, etc.) === */
   --font-display-large-font-size: 57px;
   --font-display-large-text-decoration: none;

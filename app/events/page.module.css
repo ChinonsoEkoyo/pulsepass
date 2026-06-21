@@ -10,6 +10,10 @@
   justify-content: space-between;
   padding: 1.25rem 2rem;
   border-bottom: 1px solid var(--color-outline-variant);
+  background-color: var(--color-surface);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .logoLink {
@@ -17,7 +21,13 @@
   text-decoration: none;
 }
 
-.logo {
+.logoDesktop {
+  width: auto;
+  height: 2rem;
+}
+
+.logoMobile {
+  display: none;
   width: auto;
   height: 2rem;
 }
@@ -31,6 +41,11 @@
   color: var(--color-on-surface);
   text-decoration: none;
   font-size: var(--font-body-medium-font-size);
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: var(--color-primary);
 }
 
 .main {
@@ -40,16 +55,63 @@
   width: 100%;
 }
 
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .title {
   font-size: var(--font-headline-medium-font-size);
-  margin-bottom: 2rem;
-  color: var(--color-on-surface);
+  color: #242565;
+  margin: 0;
+}
+
+.clearButton {
+  display: inline-flex;
+  padding: 0.5rem 1.25rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 50px;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-size: var(--font-label-large-font-size);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.clearButton:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.activeFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.filterTag {
+  display: inline-flex;
+  padding: 0.35rem 0.75rem;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  border-radius: 999px;
+  font-size: var(--font-body-small-font-size);
 }
 
 .empty {
   text-align: center;
   color: var(--color-on-surface-variant);
   padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .grid {
@@ -126,4 +188,31 @@
 .category {
   font-size: var(--font-body-small-font-size);
   color: var(--color-on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .logoDesktop {
+    display: none;
+  }
+
+  .logoMobile {
+    display: block;
+  }
+
+  .main {
+    padding: 1.5rem 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
