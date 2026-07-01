@@ -7,8 +7,7 @@ export const metadata: Metadata = {
     "Create, manage, and monetize events with PulsePass. Centralize your event lifecycle in one platform.",
   icons: {
     icon: [
-      { url: "/images/small-logo-purple.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/small-logo-white.png", sizes: "32x32", type: "image/png", media: "(prefers-color-scheme: dark)" },
+      { url: "/images/Pulsepass-logo-purple.png", sizes: "32x32", type: "image/png" },
     ],
   },
 };

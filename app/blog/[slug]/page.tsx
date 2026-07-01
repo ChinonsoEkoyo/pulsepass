@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { blogPosts } from "@/data/blog-posts";
+import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
 
 export async function generateStaticParams() {
@@ -19,13 +20,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <div className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.logoLink}>
-          <Image src="/images/PulsePass-purple-logo.png" alt="PulsePass" width={140} height={35} className={styles.logoDesktop} />
-          <Image src="/images/small-logo-purple.png" alt="PulsePass" width={32} height={32} className={styles.logoMobile} />
+          <Image src="/images/PulsePass-purple.png" alt="PulsePass" width={140} height={35} className={styles.logoDesktop} />
+          <Image src="/images/Pulsepass-logo-purple.png" alt="PulsePass" width={32} height={32} className={styles.logoMobile} />
         </Link>
         <nav className={styles.nav}>
           <Link href="/events" className={styles.navLink}>Events</Link>
+          <Link href="/pricing" className={styles.navLink}>Pricing</Link>
           <Link href="/login" className={styles.navLink}>Sign In</Link>
         </nav>
+        <MobileMenu />
       </header>
 
       <main className={styles.main}>

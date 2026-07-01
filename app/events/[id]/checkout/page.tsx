@@ -98,7 +98,7 @@ export default function CheckoutPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <Link href="/" className={styles.logoLink}>
-          <Image src="/images/PulsePass-purple-logo.png" alt="PulsePass" width={140} height={35} className={styles.logo} />
+          <Image src="/images/PulsePass-purple.png" alt="PulsePass" width={140} height={35} className={styles.logo} />
         </Link>
       </div>
 

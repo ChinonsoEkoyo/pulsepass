@@ -34,6 +34,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 160px;
+  --mobile-menu-color: #fff;
 }
 
 .logoLink {
@@ -73,6 +74,7 @@
 .ctaButton {
   display: inline-flex;
   padding: 0.5rem 1.25rem;
+  white-space: nowrap;
   background-color: #fff;
   color: #5B5FFF;
   border-radius: 50px;
@@ -135,6 +137,7 @@
 .primaryButton {
   display: inline-flex;
   padding: 0.875rem 2rem;
+  white-space: nowrap;
   background-color: #fff;
   color: #5B5FFF;
   border: 2px solid transparent;
@@ -247,6 +250,23 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   pointer-events: none;
 }
 
+.searchButton {
+  align-self: flex-end;
+  padding: 0.75rem 2rem;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: 50px;
+  font-size: var(--font-label-large-font-size);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.searchButton:hover {
+  opacity: 0.9;
+}
+
 .upcoming {
   padding: 4rem 0;
   width: 100%;
@@ -257,7 +277,6 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
-  padding-left: 40px;
 }
 
 .upcomingTitle {
@@ -291,7 +310,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
 
 .eventGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
@@ -299,13 +318,13 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  border: 1px solid var(--color-outline-variant);
   background-color: var(--color-surface);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition: box-shadow 0.2s;
   overflow: hidden;
   animation: fadeInUp 0.5s ease-out both;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .eventCard:nth-child(1) { animation-delay: 0.05s; }
@@ -316,56 +335,93 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
 .eventCard:nth-child(6) { animation-delay: 0.3s; }
 
 .eventCard:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.eventCardBody {
-  padding: 1.5rem;
-  flex: 1;
+.eventCardImage {
+  height: 140px;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  position: relative;
 }
 
-.eventCardTitle {
-  font-size: var(--font-title-large-font-size);
-  margin-bottom: 0.5rem;
+.eventCardImagePlaceholder {
+  width: 100%;
+  height: 100%;
+}
+
+.eventCardImageBadge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background-color: var(--color-surface);
+  padding: 0.2rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: var(--color-on-surface);
 }
 
-.eventCardVenue {
-  font-size: var(--font-body-medium-font-size);
+.eventCardBody {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.4rem + 2px);
+}
+
+.eventCardTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+}
+
+.eventCardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1;
+}
+
+.metaIcon {
+  flex-shrink: 0;
   color: var(--color-on-surface-variant);
-  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.eventCardVenue {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--color-on-surface-variant);
 }
 
 .eventCardDate {
-  font-size: var(--font-body-small-font-size);
-  color: var(--color-primary);
-  font-weight: 500;
-  margin-bottom: 0.75rem;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-on-surface-variant);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1;
 }
 
-.eventCardDesc {
-  font-size: var(--font-body-medium-font-size);
+.eventCardTime {
   color: var(--color-on-surface-variant);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 0;
+  font-weight: 400;
 }
 
 .eventCardFooter {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--color-outline-variant);
+  padding: 0.75rem 1rem;
 }
 
 .eventPrice {
-  font-weight: 600;
-  font-size: var(--font-label-large-font-size);
-  color: var(--color-on-surface);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
 .eventCategory {
@@ -407,7 +463,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
 .illustrationContainer {
   display: flex;
   align-items: center;
-  gap: 10rem;
+  gap: 8rem;
   padding: 32px 160px;
   min-height: 160px;
 }
@@ -484,7 +540,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   font-weight: 600;
   color: var(--color-upcoming-title);
   margin-bottom: 2rem;
-  padding-left: 40px;
+  text-align: center;
 }
 
 .blogGrid {
@@ -774,7 +830,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
 
   .illustrationContainer {
     padding: 32px 60px;
-    gap: 4rem;
+    gap: 8rem;
   }
 
   .footer {
@@ -814,6 +870,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   .illustrationBadge {
     margin-top: -80px;
     width: 300px;
+    align-self: center;
   }
 
   .searchContainer {
@@ -846,18 +903,31 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
     min-height: 70vh;
   }
 
+  .logoDesktop {
+    display: none;
+  }
+
+  .logoMobile {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+  }
+
   .illustrationSection {
     margin: 0 -24px;
   }
 
   .illustrationContainer {
     padding: 24px;
-    gap: 2rem;
+    gap: 4rem;
   }
 
   .illustrationBadge {
     margin-top: -60px;
     width: 240px;
+    align-self: center;
   }
 
   .footer {
@@ -872,9 +942,8 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
 
   .upcomingHeader {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
-    padding-left: 0;
   }
 
   .upcomingFilters {
@@ -886,13 +955,10 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
     justify-content: center;
   }
 
+  .upcomingTitle,
   .blogSectionTitle {
-    padding-left: 0;
-  }
-
-  .blogGrid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    font-size: 20px;
+    font-weight: 600;
   }
 
   .eventGrid {
@@ -932,16 +998,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   }
 
   .nav {
-    gap: 0.75rem;
-  }
-
-  .navLink {
-    font-size: 12px;
-  }
-
-  .ctaButton {
-    padding: 0.4rem 0.75rem;
-    font-size: 12px;
+    display: none;
   }
 
   .subscribeForm {

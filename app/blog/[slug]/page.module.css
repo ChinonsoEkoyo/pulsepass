@@ -138,6 +138,10 @@
     display: block;
   }
 
+  .nav {
+    display: none;
+  }
+
   .main {
     padding: 1.5rem 1rem;
   }

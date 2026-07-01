@@ -1,21 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, CalendarDays } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
+import { EventFilters } from "@/components/EventFilters";
 import { db } from "@/db";
+import { getCurrentUser } from "@/lib/auth";
 import { blogPosts } from "@/data/blog-posts";
+import BlogCarousel from "@/components/BlogCarousel";
+import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
 
 async function getEvents() {
   return db.event.findMany({
-    where: { status: "PUBLISHED" },
     include: { ticketTypes: true },
     orderBy: { dateTime: "asc" },
-    take: 6,
+    take: 9,
   });
 }
 
 export default async function Home() {
-  const events = await getEvents();
+  const [events, user] = await Promise.all([getEvents(), getCurrentUser()]);
+  const isLoggedIn = !!user;
 
   return (
     <div className={styles.page}>
@@ -32,7 +36,7 @@ export default async function Home() {
         <header className={styles.header}>
           <Link href="/" className={styles.logoLink}>
             <Image
-              src="/images/Pulsepass-white-logo.png"
+              src="/images/PulsePass-white.png"
               alt="PulsePass"
               width={100}
               height={25}
@@ -40,7 +44,7 @@ export default async function Home() {
               priority
             />
             <Image
-              src="/images/small-logo-white.png"
+              src="/images/Pulsepass-logo-white.png"
               alt="PulsePass"
               width={32}
               height={32}
@@ -50,20 +54,32 @@ export default async function Home() {
           </Link>
           <nav className={styles.nav}>
             <Link href="/events" className={styles.navLink}>Events</Link>
-            <Link href="/login" className={styles.navLink}>Sign In</Link>
-            <Link href="/register" className={styles.ctaButton}>Get Started</Link>
+            <Link href="/pricing" className={styles.navLink}>Pricing</Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className={styles.ctaButton}>Go to Dashboard</Link>
+            ) : (
+              <>
+                <Link href="/login" className={styles.navLink}>Sign In</Link>
+                <Link href="/register" className={styles.ctaButton}>Get Started</Link>
+              </>
+            )}
           </nav>
+          <MobileMenu isLoggedIn={isLoggedIn} />
         </header>
 
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            The event infrastructure<br />platform for Africa
+            The Event Infrastructure<br />Platform For Africa
           </h1>
           <p className={styles.heroSubtitle}>
             Create, manage, and monetize events with seamless ticketing, payments, and check-in.
           </p>
           <div className={styles.heroActions}>
-            <Link href="/register" className={styles.primaryButton}>Get Started</Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className={styles.primaryButton}>Go to Dashboard</Link>
+            ) : (
+              <Link href="/register" className={styles.primaryButton}>Get Started</Link>
+            )}
             <Link href="/events" className={styles.secondaryButton}>Learn More</Link>
           </div>
         </div>
@@ -85,35 +101,41 @@ export default async function Home() {
             <CalendarDays size={18} className={styles.calendarIcon} />
           </div>
         </div>
+        <button type="submit" className={styles.searchButton}>Search</button>
       </form>
 
       <section className={styles.upcoming}>
         <div className={styles.upcomingHeader}>
           <h2 className={styles.upcomingTitle}>Upcoming Events</h2>
           <div className={styles.upcomingFilters}>
-            <button className={styles.filterButton}>
-              Event type
-              <ChevronDown size={14} />
-            </button>
-            <button className={styles.filterButton}>
-              Category
-              <ChevronDown size={14} />
-            </button>
+            <EventFilters />
           </div>
         </div>
 
         <div className={styles.eventGrid}>
           {events.map((event) => (
             <Link key={event.id} href={`/events/${event.id}`} className={styles.eventCard}>
+              <div className={styles.eventCardImage} style={(event.images as string[])?.length ? { backgroundImage: `url(${(event.images as string[])[0]})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}>
+                {(!(event.images as string[])?.length) && <div className={styles.eventCardImagePlaceholder}></div>}
+                <span className={styles.eventCardImageBadge}>{event.category}</span>
+              </div>
               <div className={styles.eventCardBody}>
                 <h3 className={styles.eventCardTitle}>{event.title}</h3>
-                <p className={styles.eventCardVenue}>{event.venue}</p>
-                <p className={styles.eventCardDate}>
-                  {new Date(event.dateTime).toLocaleDateString("en-US", {
-                    weekday: "short", month: "long", day: "numeric", year: "numeric",
-                  })}
-                </p>
-                <p className={styles.eventCardDesc}>{event.description}</p>
+                <div className={styles.eventCardMeta}>
+                  <MapPin size={14} className={styles.metaIcon} />
+                  <p className={styles.eventCardVenue}>{event.venue}</p>
+                </div>
+                <div className={styles.eventCardMeta}>
+                  <CalendarDays size={14} className={styles.metaIcon} />
+                  <p className={styles.eventCardDate}>
+                    {new Date(event.dateTime).toLocaleDateString("en-US", {
+                      weekday: "short", month: "long", day: "numeric", year: "numeric",
+                    })}
+                    <span className={styles.eventCardTime}>
+                      {new Date(event.dateTime).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                    </span>
+                  </p>
+                </div>
               </div>
               <div className={styles.eventCardFooter}>
                 <span className={styles.eventPrice}>
@@ -121,7 +143,6 @@ export default async function Home() {
                     ? `From ₦${Math.min(...event.ticketTypes.map((t) => Number(t.price)))}`
                     : "Free"}
                 </span>
-                <span className={styles.eventCategory}>{event.category}</span>
               </div>
             </Link>
           ))}
@@ -155,33 +176,14 @@ export default async function Home() {
 
       <section className={styles.blogSection}>
         <h2 className={styles.blogSectionTitle}>Our Blog</h2>
-        <div className={styles.blogGrid}>
-          {blogPosts.slice(0, 3).map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className={styles.blogCard}>
-              <div className={styles.blogCardImage}>
-                <Image src={post.image} alt={post.title} fill sizes="(max-width: 768px) 100vw, 340px" />
-              </div>
-              <div className={styles.blogCardBody}>
-                <h3 className={styles.blogCardTitle}>{post.title}</h3>
-                <p className={styles.blogCardDesc}>{post.description}</p>
-                <div className={styles.blogCardFooter}>
-                  <span className={styles.blogDate}>{post.date}</span>
-                  <span className={styles.blogAuthor}>{post.author}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className={styles.blogLoadMore}>
-          <Link href="/blog" className={styles.blogLoadMoreButton}>Load More</Link>
-        </div>
+        <BlogCarousel posts={blogPosts} />
       </section>
 
       <footer className={styles.footer}>
         <div className={styles.footerGrid}>
           <div className={styles.footerCol}>
             <Image
-              src="/images/Pulsepass-white-logo.png"
+              src="/images/PulsePass-white.png"
               alt="PulsePass"
               width={170.7}
               height={28.7}
@@ -215,6 +217,7 @@ export default async function Home() {
             <h4 className={styles.footerTitle}>PulsePass</h4>
             <nav className={styles.footerLinks}>
               <Link href="/about">About Us</Link>
+              <Link href="/pricing">Pricing</Link>
               <Link href="/how-it-works">How it Works</Link>
               <Link href="/blog">Blog</Link>
               <Link href="/contact">Contact Us</Link>

@@ -9,8 +9,16 @@ const createEventSchema = z.object({
   description: z.string().min(10),
   venue: z.string().min(2),
   dateTime: z.string().datetime(),
+  endDate: z.string().datetime().optional(),
+  recurrence: z.enum(["SINGLE", "MULTI_DAY", "WEEKLY"]).default("SINGLE"),
+  recurrenceDays: z.array(z.number().int().min(0).max(6)).optional(),
+  isVirtual: z.boolean().default(false),
   category: z.string().min(2),
   bannerUrl: z.string().optional(),
+  images: z.array(z.string()).optional(),
+  instagram: z.string().optional(),
+  facebook: z.string().optional(),
+  twitter: z.string().optional(),
   ticketTypes: z.array(z.object({
     name: z.string().min(1),
     price: z.number().min(0),
@@ -43,12 +51,16 @@ export async function POST(request: NextRequest) {
       return error(parsed.error.errors[0].message);
     }
 
-    const { ticketTypes, ...eventData } = parsed.data;
+    const { ticketTypes, images: imagesData, endDate, recurrenceDays, ...eventData } = parsed.data;
 
     const event = await db.event.create({
       data: {
         ...eventData,
+        images: imagesData ?? [],
+        status: "PUBLISHED",
         dateTime: new Date(eventData.dateTime),
+        endDate: endDate ? new Date(endDate) : null,
+        recurrenceDays: recurrenceDays ?? [],
         organizerId: user.userId,
         ticketTypes: ticketTypes
           ? { create: ticketTypes }

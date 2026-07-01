@@ -1,0 +1,80 @@
+.menuButton {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--mobile-menu-color, #242565);
+  cursor: pointer;
+  padding: 0.25rem;
+  z-index: 20;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.25s ease;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 6rem 2rem 2rem;
+  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navLink {
+  font-size: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.navLink:hover {
+  opacity: 1;
+}
+
+.ctaButton {
+  display: inline-flex;
+  padding: 0.75rem 2rem;
+  background-color: #fff;
+  color: #5B5FFF;
+  border-radius: 50px;
+  font-size: var(--font-label-large-font-size);
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.ctaButton:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
+  }
+}

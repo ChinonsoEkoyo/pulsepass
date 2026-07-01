@@ -1,0 +1,96 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-surface-container-low);
+}
+
+.logo {
+  display: block;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.title {
+  font-size: var(--font-headline-small-font-size);
+  margin: 0 0 0.5rem;
+  color: var(--color-on-surface);
+  text-align: center;
+}
+
+.subtitle {
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.button {
+  width: 100%;
+}
+
+.eyeButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.eyeButton:hover {
+  color: var(--color-on-surface);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: var(--font-body-medium-font-size);
+}
+
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.doneIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  margin: 0 auto 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 1rem;
+  }
+}

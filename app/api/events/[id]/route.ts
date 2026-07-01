@@ -9,8 +9,16 @@ const updateEventSchema = z.object({
   description: z.string().min(10).optional(),
   venue: z.string().min(2).optional(),
   dateTime: z.string().datetime().optional(),
+  endDate: z.string().datetime().optional(),
+  recurrence: z.enum(["SINGLE", "MULTI_DAY", "WEEKLY"]).optional(),
+  recurrenceDays: z.array(z.number().int().min(0).max(6)).optional(),
+  isVirtual: z.boolean().optional(),
   category: z.string().min(2).optional(),
   bannerUrl: z.string().optional(),
+  images: z.array(z.string()).optional(),
+  instagram: z.string().optional(),
+  facebook: z.string().optional(),
+  twitter: z.string().optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "CANCELLED", "COMPLETED"]).optional(),
 });
 
@@ -49,21 +57,27 @@ export async function PUT(
     const body = await request.json();
     const parsed = updateEventSchema.safeParse(body);
     if (!parsed.success) {
-      return error(parsed.error.errors[0].message);
+      return error(parsed.error.errors.map(e => e.message).join(", "));
     }
+
+    const { dateTime, endDate, recurrenceDays, ...rest } = parsed.data;
 
     const updated = await db.event.update({
       where: { id },
-      data: parsed.data.dateTime
-        ? { ...parsed.data, dateTime: new Date(parsed.data.dateTime) }
-        : parsed.data,
+      data: {
+        ...(rest as Record<string, unknown>),
+        ...(dateTime ? { dateTime: new Date(dateTime) } : {}),
+        ...(endDate ? { endDate: new Date(endDate) } : {}),
+        ...(recurrenceDays !== undefined ? { recurrenceDays } : {}),
+      },
       include: { ticketTypes: true },
     });
 
     return success(updated);
   } catch (e) {
     console.error("Update event error:", e);
-    return error("Internal server error", 500);
+    const message = e instanceof Error ? e.message : "Internal server error";
+    return error(message, 500);
   }
 }
 

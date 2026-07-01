@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin, Clock } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, CalendarDays } from "lucide-react";
 import { db } from "@/db";
+import MobileMenu from "@/components/MobileMenu";
+import { ImageCarousel } from "@/components/ImageCarousel";
+import { getCurrentUser } from "@/lib/auth";
 import styles from "./page.module.css";
 
 async function getEvent(id: string) {
@@ -17,7 +20,7 @@ async function getRelatedEvents(category: string, excludeId: string) {
     where: { status: "PUBLISHED", category, id: { not: excludeId } },
     include: { ticketTypes: true },
     orderBy: { dateTime: "asc" },
-    take: 3,
+    take: 6,
   });
 }
 
@@ -28,6 +31,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   const relatedEvents = await getRelatedEvents(event.category, event.id);
 
+  const user = await getCurrentUser();
+
   const minPrice = event.ticketTypes.length > 0
     ? Math.min(...event.ticketTypes.map((t) => Number(t.price)))
     : 0;
@@ -36,22 +41,26 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     <div className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.logoLink}>
-          <Image src="/images/PulsePass-purple-logo.png" alt="PulsePass" width={140} height={35} className={styles.logoDesktop} />
-          <Image src="/images/small-logo-purple.png" alt="PulsePass" width={32} height={32} className={styles.logoMobile} />
+          <Image src="/images/PulsePass-purple.png" alt="PulsePass" width={140} height={35} className={styles.logoDesktop} />
+          <Image src="/images/Pulsepass-logo-purple.png" alt="PulsePass" width={32} height={32} className={styles.logoMobile} />
         </Link>
         <nav className={styles.nav}>
           <Link href="/events" className={styles.navLink}>Events</Link>
-          <Link href="/login" className={styles.navLink}>Sign In</Link>
+          <Link href="/pricing" className={styles.navLink}>Pricing</Link>
+          {user ? (
+            <Link href="/dashboard" className={styles.dashboardButton}>Go to Dashboard</Link>
+          ) : (
+            <Link href="/login" className={styles.navLink}>Sign In</Link>
+          )}
         </nav>
+        <MobileMenu />
       </header>
 
       <div className={styles.banner}>
-        <Image
-          src={event.bannerUrl || "/images/Concertimage.png"}
-          alt={event.title}
-          fill
-          className={styles.bannerImage}
-          priority
+        <ImageCarousel
+          images={(event.images as string[]) || []}
+          fallbackUrl={event.bannerUrl || "/images/Concertimage.png"}
+          title={event.title}
         />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
@@ -122,7 +131,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
         {relatedEvents.length > 0 && (
           <section className={styles.related}>
-            <h2 className={styles.relatedTitle}>More {event.category} Events</h2>
+            <h2 className={styles.relatedTitle}>Other events you may like</h2>
             <div className={styles.relatedGrid}>
               {relatedEvents.map((re) => {
                 const reMinPrice = re.ticketTypes.length > 0
@@ -130,12 +139,16 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                   : 0;
                 return (
                   <Link key={re.id} href={`/events/${re.id}`} className={styles.relatedCard}>
+                    <div className={styles.eventCardImage} style={(re.images as string[])?.length ? { backgroundImage: `url(${(re.images as string[])[0]})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}>
+                      {(!(re.images as string[])?.length) && <div className={styles.eventCardImagePlaceholder}></div>}
+                      <span className={styles.eventCardImageBadge}>{re.category}</span>
+                    </div>
                     <div className={styles.relatedCardBody}>
                       <h3 className={styles.relatedCardTitle}>{re.title}</h3>
                       <p className={styles.relatedCardVenue}>{re.venue}</p>
                       <p className={styles.relatedCardDate}>
                         {new Date(re.dateTime).toLocaleDateString("en-US", {
-                          month: "short", day: "numeric", year: "numeric",
+                          weekday: "short", month: "long", day: "numeric", year: "numeric",
                         })}
                       </p>
                     </div>

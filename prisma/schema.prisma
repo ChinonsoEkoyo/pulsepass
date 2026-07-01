@@ -34,35 +34,72 @@ enum ValidationStatus {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  role         UserRole @default(USER)
-  passwordHash String   @map("password_hash")
-  avatarUrl    String?  @map("avatar_url")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  role          UserRole  @default(USER)
+  passwordHash  String    @map("password_hash")
+  avatarUrl     String?   @map("avatar_url")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  events        Event[]
-  orders        Order[]
-  rsvps         RSVP[]
-  attendees     Attendee[]
+  events           Event[]
+  orders           Order[]
+  rsvps            RSVP[]
+  attendees        Attendee[]
+  resetTokens      PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
 
   @@map("users")
 }
 
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  tokenHash String   @unique @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  usedAt    DateTime? @map("used_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  tokenHash String   @unique @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  usedAt    DateTime? @map("used_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_tokens")
+}
+
 model Event {
-  id           String      @id @default(cuid())
-  organizerId  String      @map("organizer_id")
-  title        String
-  description  String
-  venue        String
-  dateTime     DateTime    @map("date_time")
-  category     String
-  bannerUrl    String?     @map("banner_url")
-  status       EventStatus @default(DRAFT)
-  createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @updatedAt @map("updated_at")
+  id             String      @id @default(cuid())
+  organizerId    String      @map("organizer_id")
+  title          String
+  description    String
+  venue          String
+  dateTime       DateTime    @map("date_time")
+  endDate        DateTime?   @map("end_date")
+  recurrence     String      @default("SINGLE")
+  recurrenceDays Json?       @map("recurrence_days")
+  isVirtual      Boolean     @default(false) @map("is_virtual")
+  category       String
+  bannerUrl      String?     @map("banner_url")
+  images         Json?       @default("[]")
+  instagram      String?
+  facebook       String?
+  twitter        String?
+  status         EventStatus @default(DRAFT)
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
 
   organizer     User          @relation(fields: [organizerId], references: [id])
   ticketTypes   TicketType[]

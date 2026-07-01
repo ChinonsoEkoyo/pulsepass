@@ -1,16 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/db";
+import { CalendarDays, MapPin } from "lucide-react";
+import MobileMenu from "@/components/MobileMenu";
+import { getCurrentUser } from "@/lib/auth";
 import styles from "./page.module.css";
 
 interface SearchParams {
   search?: string;
   location?: string;
   date?: string;
+  type?: string;
+  category?: string;
 }
 
 async function getEvents(searchParams: SearchParams) {
-  const where: Record<string, unknown> = { status: "PUBLISHED" };
+  const where: Record<string, unknown> = {};
 
   if (searchParams.search) {
     where.title = { contains: searchParams.search, mode: "insensitive" };
@@ -23,6 +28,13 @@ async function getEvents(searchParams: SearchParams) {
     const dayEnd = new Date(dayStart);
     dayEnd.setDate(dayEnd.getDate() + 1);
     where.dateTime = { gte: dayStart, lt: dayEnd };
+  }
+  if (searchParams.category && searchParams.category !== "All") {
+    where.category = { equals: searchParams.category, mode: "insensitive" };
+  }
+  if (searchParams.type && searchParams.type !== "All") {
+    where.title = where.title || {};
+    (where.title as any).contains = (where.title as any).contains || undefined;
   }
 
   return db.event.findMany({
@@ -40,19 +52,26 @@ export default async function EventsPage({
 }) {
   const sp = await searchParams;
   const events = await getEvents(sp);
-  const hasFilters = !!(sp.search || sp.location || sp.date);
+  const hasFilters = !!(sp.search || sp.location || sp.date || sp.type || sp.category);
+  const user = await getCurrentUser();
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.logoLink}>
-          <Image src="/images/PulsePass-purple-logo.png" alt="PulsePass" width={140} height={35} className={styles.logoDesktop} />
-          <Image src="/images/small-logo-purple.png" alt="PulsePass" width={32} height={32} className={styles.logoMobile} />
+          <Image src="/images/PulsePass-purple.png" alt="PulsePass" width={140} height={35} className={styles.logoDesktop} />
+          <Image src="/images/Pulsepass-logo-purple.png" alt="PulsePass" width={32} height={32} className={styles.logoMobile} />
         </Link>
         <nav className={styles.nav}>
           <Link href="/events" className={styles.navLink}>Events</Link>
-          <Link href="/login" className={styles.navLink}>Sign In</Link>
+          <Link href="/pricing" className={styles.navLink}>Pricing</Link>
+          {user ? (
+            <Link href="/dashboard" className={styles.dashboardButton}>Go to Dashboard</Link>
+          ) : (
+            <Link href="/login" className={styles.navLink}>Sign In</Link>
+          )}
         </nav>
+        <MobileMenu />
       </header>
 
       <main className={styles.main}>
@@ -100,15 +119,27 @@ export default async function EventsPage({
           <div className={styles.grid}>
             {events.map((event) => (
               <Link key={event.id} href={`/events/${event.id}`} className={styles.card}>
+                <div className={styles.eventCardImage} style={(event.images as string[])?.length ? { backgroundImage: `url(${(event.images as string[])[0]})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}>
+                  {(!(event.images as string[])?.length) && <div className={styles.eventCardImagePlaceholder}></div>}
+                  <span className={styles.eventCardImageBadge}>{event.category}</span>
+                </div>
                 <div className={styles.cardBody}>
-                  <h2 className={styles.cardTitle}>{event.title}</h2>
-                  <p className={styles.cardVenue}>{event.venue}</p>
-                  <p className={styles.cardDate}>
-                    {new Date(event.dateTime).toLocaleDateString("en-US", {
-                      weekday: "short", month: "long", day: "numeric", year: "numeric",
-                    })}
-                  </p>
-                  <p className={styles.cardDesc}>{event.description}</p>
+                  <h3 className={styles.cardTitle}>{event.title}</h3>
+                  <div className={styles.eventCardMeta}>
+                    <MapPin size={14} className={styles.metaIcon} />
+                    <p className={styles.cardVenue}>{event.venue}</p>
+                  </div>
+                  <div className={styles.eventCardMeta}>
+                    <CalendarDays size={14} className={styles.metaIcon} />
+                    <p className={styles.cardDate}>
+                      {new Date(event.dateTime).toLocaleDateString("en-US", {
+                        weekday: "short", month: "long", day: "numeric", year: "numeric",
+                      })}
+                      <span className={styles.cardTime}>
+                        {new Date(event.dateTime).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                      </span>
+                    </p>
+                  </div>
                 </div>
                 <div className={styles.cardFooter}>
                   <span className={styles.price}>
@@ -116,7 +147,6 @@ export default async function EventsPage({
                       ? `From ₦${Math.min(...event.ticketTypes.map((t) => Number(t.price)))}`
                       : "Free"}
                   </span>
-                  <span className={styles.category}>{event.category}</span>
                 </div>
               </Link>
             ))}

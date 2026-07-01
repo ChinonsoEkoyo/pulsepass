@@ -37,6 +37,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 160px;
+  --mobile-menu-color: #fff;
 }
 
 .page_logoLink__1DdOO {
@@ -76,6 +77,7 @@
 .page_ctaButton__lcwUc {
   display: inline-flex;
   padding: 0.5rem 1.25rem;
+  white-space: nowrap;
   background-color: #fff;
   color: #5B5FFF;
   border-radius: 50px;
@@ -138,6 +140,7 @@
 .page_primaryButton__gjjaG {
   display: inline-flex;
   padding: 0.875rem 2rem;
+  white-space: nowrap;
   background-color: #fff;
   color: #5B5FFF;
   border: 2px solid transparent;
@@ -250,6 +253,23 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
   pointer-events: none;
 }
 
+.page_searchButton__7fnJl {
+  align-self: flex-end;
+  padding: 0.75rem 2rem;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: 50px;
+  font-size: var(--font-label-large-font-size);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.page_searchButton__7fnJl:hover {
+  opacity: 0.9;
+}
+
 .page_upcoming__5_4n6 {
   padding: 4rem 0;
   width: 100%;
@@ -260,7 +280,6 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
-  padding-left: 40px;
 }
 
 .page_upcomingTitle__syAYh {
@@ -294,7 +313,7 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
 
 .page_eventGrid__kISJk {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 1.5rem;
   gap: 1.5rem;
 }
@@ -303,13 +322,13 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  border: 1px solid var(--color-outline-variant);
   background-color: var(--color-surface);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition: box-shadow 0.2s;
   overflow: hidden;
   animation: page_fadeInUp__7IOrd 0.5s ease-out both;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .page_eventCard__WvO7z:nth-child(1) { animation-delay: 0.05s; }
@@ -320,56 +339,93 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
 .page_eventCard__WvO7z:nth-child(6) { animation-delay: 0.3s; }
 
 .page_eventCard__WvO7z:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.page_eventCardBody__eJIlD {
-  padding: 1.5rem;
-  flex: 1 1;
+.page_eventCardImage__E1WAQ {
+  height: 140px;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  position: relative;
 }
 
-.page_eventCardTitle__ULICl {
-  font-size: var(--font-title-large-font-size);
-  margin-bottom: 0.5rem;
+.page_eventCardImagePlaceholder__LMgoN {
+  width: 100%;
+  height: 100%;
+}
+
+.page_eventCardImageBadge__u8yvM {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background-color: var(--color-surface);
+  padding: 0.2rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: var(--color-on-surface);
 }
 
-.page_eventCardVenue__8N6Qp {
-  font-size: var(--font-body-medium-font-size);
+.page_eventCardBody__eJIlD {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.4rem + 2px);
+}
+
+.page_eventCardTitle__ULICl {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+}
+
+.page_eventCardMeta__mnYjU {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1;
+}
+
+.page_metaIcon__m9xaN {
+  flex-shrink: 0;
   color: var(--color-on-surface-variant);
-  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.page_eventCardVenue__8N6Qp {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--color-on-surface-variant);
 }
 
 .page_eventCardDate__dCWuz {
-  font-size: var(--font-body-small-font-size);
-  color: var(--color-primary);
-  font-weight: 500;
-  margin-bottom: 0.75rem;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-on-surface-variant);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1;
 }
 
-.page_eventCardDesc__pRRtE {
-  font-size: var(--font-body-medium-font-size);
+.page_eventCardTime__V2l4V {
   color: var(--color-on-surface-variant);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 0;
+  font-weight: 400;
 }
 
 .page_eventCardFooter__VPT1z {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--color-outline-variant);
+  padding: 0.75rem 1rem;
 }
 
 .page_eventPrice__fRxVP {
-  font-weight: 600;
-  font-size: var(--font-label-large-font-size);
-  color: var(--color-on-surface);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
 .page_eventCategory__e4wfz {
@@ -411,7 +467,7 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
 .page_illustrationContainer__Vt7a5 {
   display: flex;
   align-items: center;
-  gap: 10rem;
+  gap: 8rem;
   padding: 32px 160px;
   min-height: 160px;
 }
@@ -488,7 +544,7 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
   font-weight: 600;
   color: var(--color-upcoming-title);
   margin-bottom: 2rem;
-  padding-left: 40px;
+  text-align: center;
 }
 
 .page_blogGrid__TVf3M {
@@ -780,7 +836,7 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
 
   .page_illustrationContainer__Vt7a5 {
     padding: 32px 60px;
-    gap: 4rem;
+    gap: 8rem;
   }
 
   .page_footer__F3MD0 {
@@ -820,6 +876,7 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
   .page_illustrationBadge__FQn0I {
     margin-top: -80px;
     width: 300px;
+    align-self: center;
   }
 
   .page_searchContainer__pJPVb {
@@ -852,18 +909,31 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
     min-height: 70vh;
   }
 
+  .page_logoDesktop__95A5s {
+    display: none;
+  }
+
+  .page_logoMobile__BP7iQ {
+    display: block;
+  }
+
+  .page_nav__ijo23 {
+    display: none;
+  }
+
   .page_illustrationSection___SbEy {
     margin: 0 -24px;
   }
 
   .page_illustrationContainer__Vt7a5 {
     padding: 24px;
-    gap: 2rem;
+    gap: 4rem;
   }
 
   .page_illustrationBadge__FQn0I {
     margin-top: -60px;
     width: 240px;
+    align-self: center;
   }
 
   .page_footer__F3MD0 {
@@ -878,9 +948,8 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
 
   .page_upcomingHeader__We_Ho {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
-    padding-left: 0;
   }
 
   .page_upcomingFilters__hICiq {
@@ -892,13 +961,10 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
     justify-content: center;
   }
 
+  .page_upcomingTitle__syAYh,
   .page_blogSectionTitle__CL56p {
-    padding-left: 0;
-  }
-
-  .page_blogGrid__TVf3M {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    font-size: 20px;
+    font-weight: 600;
   }
 
   .page_eventGrid__kISJk {
@@ -938,16 +1004,7 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
   }
 
   .page_nav__ijo23 {
-    gap: 0.75rem;
-  }
-
-  .page_navLink__Z58UL {
-    font-size: 12px;
-  }
-
-  .page_ctaButton__lcwUc {
-    padding: 0.4rem 0.75rem;
-    font-size: 12px;
+    display: none;
   }
 
   .page_subscribeForm__beeql {
@@ -966,6 +1023,233 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
 
   .page_subscribeButton__vuqjo {
     width: 100%;
+  }
+}
+
+/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[3]!./components/BlogCarousel.module.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************/
+.BlogCarousel_carousel__yrCR9 {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.BlogCarousel_track__FH9Ho {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0.5rem 0;
+  scroll-behavior: smooth;
+}
+
+.BlogCarousel_track__FH9Ho::-webkit-scrollbar {
+  display: none;
+}
+
+.BlogCarousel_card__0LFLp {
+  flex: 0 0 340px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s;
+}
+
+.BlogCarousel_card__0LFLp:hover {
+  transform: translateY(-4px);
+}
+
+.BlogCarousel_cardImage__7W2LO {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 24px;
+  overflow: hidden;
+  background-color: var(--color-outline-variant);
+}
+
+.BlogCarousel_cardImage__7W2LO img {
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.BlogCarousel_card__0LFLp:hover .BlogCarousel_cardImage__7W2LO img {
+  transform: scale(1.05);
+}
+
+.BlogCarousel_cardBody__mBPoC {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.BlogCarousel_cardTitle__5Un9N {
+  font-size: 20px;
+  font-weight: 700;
+  color: #242565;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.BlogCarousel_cardDesc__wq7Oo {
+  font-size: 14px;
+  color: #000;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.BlogCarousel_cardFooter__FVyAe {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 16px;
+  color: var(--color-on-surface-variant);
+  font-weight: 400;
+}
+
+.BlogCarousel_cardDate__HqyxE {
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+}
+
+.BlogCarousel_cardAuthor__P5Zu0 {
+  font-size: var(--font-body-small-font-size);
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.BlogCarousel_arrow__RB7kB {
+  position: absolute;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #242565;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.BlogCarousel_arrow__RB7kB:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  transform: scale(1.05);
+}
+
+.BlogCarousel_arrowLeft__d04Qh {
+  left: -20px;
+}
+
+.BlogCarousel_arrowRight__WtIs6 {
+  right: -20px;
+}
+
+@media (max-width: 768px) {
+  .BlogCarousel_card__0LFLp {
+    flex: 0 0 280px;
+  }
+
+  .BlogCarousel_arrow__RB7kB {
+    display: none;
+  }
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[3]!./components/MobileMenu.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+.MobileMenu_menuButton__agPWt {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--mobile-menu-color, #242565);
+  cursor: pointer;
+  padding: 0.25rem;
+  z-index: 20;
+}
+
+.MobileMenu_overlay__0sGNm {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: MobileMenu_fadeIn__0h5Cn 0.25s ease;
+}
+
+.MobileMenu_mobileNav__CFl5e {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 6rem 2rem 2rem;
+  animation: MobileMenu_slideDown__eFfhy 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.MobileMenu_navLink__q_f1O {
+  font-size: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.MobileMenu_navLink__q_f1O:hover {
+  opacity: 1;
+}
+
+.MobileMenu_ctaButton__L_Hyb {
+  display: inline-flex;
+  padding: 0.75rem 2rem;
+  background-color: #fff;
+  color: #5B5FFF;
+  border-radius: 50px;
+  font-size: var(--font-label-large-font-size);
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.MobileMenu_ctaButton__L_Hyb:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes MobileMenu_fadeIn__0h5Cn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes MobileMenu_slideDown__eFfhy {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .MobileMenu_menuButton__agPWt {
+    display: block;
   }
 }
 

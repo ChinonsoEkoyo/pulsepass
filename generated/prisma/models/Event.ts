@@ -31,8 +31,14 @@ export type EventMinAggregateOutputType = {
   description: string | null
   venue: string | null
   dateTime: Date | null
+  endDate: Date | null
+  recurrence: string | null
+  isVirtual: boolean | null
   category: string | null
   bannerUrl: string | null
+  instagram: string | null
+  facebook: string | null
+  twitter: string | null
   status: $Enums.EventStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -45,8 +51,14 @@ export type EventMaxAggregateOutputType = {
   description: string | null
   venue: string | null
   dateTime: Date | null
+  endDate: Date | null
+  recurrence: string | null
+  isVirtual: boolean | null
   category: string | null
   bannerUrl: string | null
+  instagram: string | null
+  facebook: string | null
+  twitter: string | null
   status: $Enums.EventStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,8 +71,16 @@ export type EventCountAggregateOutputType = {
   description: number
   venue: number
   dateTime: number
+  endDate: number
+  recurrence: number
+  recurrenceDays: number
+  isVirtual: number
   category: number
   bannerUrl: number
+  images: number
+  instagram: number
+  facebook: number
+  twitter: number
   status: number
   createdAt: number
   updatedAt: number
@@ -75,8 +95,14 @@ export type EventMinAggregateInputType = {
   description?: true
   venue?: true
   dateTime?: true
+  endDate?: true
+  recurrence?: true
+  isVirtual?: true
   category?: true
   bannerUrl?: true
+  instagram?: true
+  facebook?: true
+  twitter?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -89,8 +115,14 @@ export type EventMaxAggregateInputType = {
   description?: true
   venue?: true
   dateTime?: true
+  endDate?: true
+  recurrence?: true
+  isVirtual?: true
   category?: true
   bannerUrl?: true
+  instagram?: true
+  facebook?: true
+  twitter?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -103,8 +135,16 @@ export type EventCountAggregateInputType = {
   description?: true
   venue?: true
   dateTime?: true
+  endDate?: true
+  recurrence?: true
+  recurrenceDays?: true
+  isVirtual?: true
   category?: true
   bannerUrl?: true
+  images?: true
+  instagram?: true
+  facebook?: true
+  twitter?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -190,8 +230,16 @@ export type EventGroupByOutputType = {
   description: string
   venue: string
   dateTime: Date
+  endDate: Date | null
+  recurrence: string
+  recurrenceDays: runtime.JsonValue | null
+  isVirtual: boolean
   category: string
   bannerUrl: string | null
+  images: runtime.JsonValue | null
+  instagram: string | null
+  facebook: string | null
+  twitter: string | null
   status: $Enums.EventStatus
   createdAt: Date
   updatedAt: Date
@@ -225,8 +273,16 @@ export type EventWhereInput = {
   description?: Prisma.StringFilter<"Event"> | string
   venue?: Prisma.StringFilter<"Event"> | string
   dateTime?: Prisma.DateTimeFilter<"Event"> | Date | string
+  endDate?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
+  recurrence?: Prisma.StringFilter<"Event"> | string
+  recurrenceDays?: Prisma.JsonNullableFilter<"Event">
+  isVirtual?: Prisma.BoolFilter<"Event"> | boolean
   category?: Prisma.StringFilter<"Event"> | string
   bannerUrl?: Prisma.StringNullableFilter<"Event"> | string | null
+  images?: Prisma.JsonNullableFilter<"Event">
+  instagram?: Prisma.StringNullableFilter<"Event"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Event"> | string | null
+  twitter?: Prisma.StringNullableFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -244,8 +300,16 @@ export type EventOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   dateTime?: Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  recurrenceDays?: Prisma.SortOrderInput | Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
   category?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  images?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagram?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebook?: Prisma.SortOrderInput | Prisma.SortOrder
+  twitter?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -266,8 +330,16 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Event"> | string
   venue?: Prisma.StringFilter<"Event"> | string
   dateTime?: Prisma.DateTimeFilter<"Event"> | Date | string
+  endDate?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
+  recurrence?: Prisma.StringFilter<"Event"> | string
+  recurrenceDays?: Prisma.JsonNullableFilter<"Event">
+  isVirtual?: Prisma.BoolFilter<"Event"> | boolean
   category?: Prisma.StringFilter<"Event"> | string
   bannerUrl?: Prisma.StringNullableFilter<"Event"> | string | null
+  images?: Prisma.JsonNullableFilter<"Event">
+  instagram?: Prisma.StringNullableFilter<"Event"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Event"> | string | null
+  twitter?: Prisma.StringNullableFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -285,8 +357,16 @@ export type EventOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   dateTime?: Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  recurrenceDays?: Prisma.SortOrderInput | Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
   category?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  images?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagram?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebook?: Prisma.SortOrderInput | Prisma.SortOrder
+  twitter?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -305,8 +385,16 @@ export type EventScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Event"> | string
   venue?: Prisma.StringWithAggregatesFilter<"Event"> | string
   dateTime?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
+  endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
+  recurrence?: Prisma.StringWithAggregatesFilter<"Event"> | string
+  recurrenceDays?: Prisma.JsonNullableWithAggregatesFilter<"Event">
+  isVirtual?: Prisma.BoolWithAggregatesFilter<"Event"> | boolean
   category?: Prisma.StringWithAggregatesFilter<"Event"> | string
   bannerUrl?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  images?: Prisma.JsonNullableWithAggregatesFilter<"Event">
+  instagram?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  facebook?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  twitter?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusWithAggregatesFilter<"Event"> | $Enums.EventStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -318,8 +406,16 @@ export type EventCreateInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -337,8 +433,16 @@ export type EventUncheckedCreateInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -354,8 +458,16 @@ export type EventUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -373,8 +485,16 @@ export type EventUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -391,8 +511,16 @@ export type EventCreateManyInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -404,8 +532,16 @@ export type EventUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,8 +554,16 @@ export type EventUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,8 +586,16 @@ export type EventCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   dateTime?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  recurrenceDays?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
   category?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  twitter?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -456,8 +608,14 @@ export type EventMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   dateTime?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
   category?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  twitter?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -470,8 +628,14 @@ export type EventMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   dateTime?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  recurrence?: Prisma.SortOrder
+  isVirtual?: Prisma.SortOrder
   category?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  twitter?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -590,8 +754,16 @@ export type EventCreateWithoutOrganizerInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -607,8 +779,16 @@ export type EventUncheckedCreateWithoutOrganizerInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -654,8 +834,16 @@ export type EventScalarWhereInput = {
   description?: Prisma.StringFilter<"Event"> | string
   venue?: Prisma.StringFilter<"Event"> | string
   dateTime?: Prisma.DateTimeFilter<"Event"> | Date | string
+  endDate?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
+  recurrence?: Prisma.StringFilter<"Event"> | string
+  recurrenceDays?: Prisma.JsonNullableFilter<"Event">
+  isVirtual?: Prisma.BoolFilter<"Event"> | boolean
   category?: Prisma.StringFilter<"Event"> | string
   bannerUrl?: Prisma.StringNullableFilter<"Event"> | string | null
+  images?: Prisma.JsonNullableFilter<"Event">
+  instagram?: Prisma.StringNullableFilter<"Event"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Event"> | string | null
+  twitter?: Prisma.StringNullableFilter<"Event"> | string | null
   status?: Prisma.EnumEventStatusFilter<"Event"> | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -667,8 +855,16 @@ export type EventCreateWithoutTicketTypesInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -685,8 +881,16 @@ export type EventUncheckedCreateWithoutTicketTypesInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -717,8 +921,16 @@ export type EventUpdateWithoutTicketTypesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -735,8 +947,16 @@ export type EventUncheckedUpdateWithoutTicketTypesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -751,8 +971,16 @@ export type EventCreateWithoutOrdersInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -769,8 +997,16 @@ export type EventUncheckedCreateWithoutOrdersInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -801,8 +1037,16 @@ export type EventUpdateWithoutOrdersInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -819,8 +1063,16 @@ export type EventUncheckedUpdateWithoutOrdersInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -835,8 +1087,16 @@ export type EventCreateWithoutRsvpsInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -853,8 +1113,16 @@ export type EventUncheckedCreateWithoutRsvpsInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -885,8 +1153,16 @@ export type EventUpdateWithoutRsvpsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -903,8 +1179,16 @@ export type EventUncheckedUpdateWithoutRsvpsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -919,8 +1203,16 @@ export type EventCreateWithoutAttendeesInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -937,8 +1229,16 @@ export type EventUncheckedCreateWithoutAttendeesInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -969,8 +1269,16 @@ export type EventUpdateWithoutAttendeesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -987,8 +1295,16 @@ export type EventUncheckedUpdateWithoutAttendeesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1003,8 +1319,16 @@ export type EventCreateManyOrganizerInput = {
   description: string
   venue: string
   dateTime: Date | string
+  endDate?: Date | string | null
+  recurrence?: string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: boolean
   category: string
   bannerUrl?: string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
   status?: $Enums.EventStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1016,8 +1340,16 @@ export type EventUpdateWithoutOrganizerInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1033,8 +1365,16 @@ export type EventUncheckedUpdateWithoutOrganizerInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1050,8 +1390,16 @@ export type EventUncheckedUpdateManyWithoutOrganizerInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   dateTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  recurrence?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceDays?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isVirtual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  images?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1122,8 +1470,16 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   description?: boolean
   venue?: boolean
   dateTime?: boolean
+  endDate?: boolean
+  recurrence?: boolean
+  recurrenceDays?: boolean
+  isVirtual?: boolean
   category?: boolean
   bannerUrl?: boolean
+  images?: boolean
+  instagram?: boolean
+  facebook?: boolean
+  twitter?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1142,8 +1498,16 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   venue?: boolean
   dateTime?: boolean
+  endDate?: boolean
+  recurrence?: boolean
+  recurrenceDays?: boolean
+  isVirtual?: boolean
   category?: boolean
   bannerUrl?: boolean
+  images?: boolean
+  instagram?: boolean
+  facebook?: boolean
+  twitter?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1157,8 +1521,16 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   venue?: boolean
   dateTime?: boolean
+  endDate?: boolean
+  recurrence?: boolean
+  recurrenceDays?: boolean
+  isVirtual?: boolean
   category?: boolean
   bannerUrl?: boolean
+  images?: boolean
+  instagram?: boolean
+  facebook?: boolean
+  twitter?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1172,14 +1544,22 @@ export type EventSelectScalar = {
   description?: boolean
   venue?: boolean
   dateTime?: boolean
+  endDate?: boolean
+  recurrence?: boolean
+  recurrenceDays?: boolean
+  isVirtual?: boolean
   category?: boolean
   bannerUrl?: boolean
+  images?: boolean
+  instagram?: boolean
+  facebook?: boolean
+  twitter?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizerId" | "title" | "description" | "venue" | "dateTime" | "category" | "bannerUrl" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizerId" | "title" | "description" | "venue" | "dateTime" | "endDate" | "recurrence" | "recurrenceDays" | "isVirtual" | "category" | "bannerUrl" | "images" | "instagram" | "facebook" | "twitter" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organizer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ticketTypes?: boolean | Prisma.Event$ticketTypesArgs<ExtArgs>
@@ -1211,8 +1591,16 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     description: string
     venue: string
     dateTime: Date
+    endDate: Date | null
+    recurrence: string
+    recurrenceDays: runtime.JsonValue | null
+    isVirtual: boolean
     category: string
     bannerUrl: string | null
+    images: runtime.JsonValue | null
+    instagram: string | null
+    facebook: string | null
+    twitter: string | null
     status: $Enums.EventStatus
     createdAt: Date
     updatedAt: Date
@@ -1650,8 +2038,16 @@ export interface EventFieldRefs {
   readonly description: Prisma.FieldRef<"Event", 'String'>
   readonly venue: Prisma.FieldRef<"Event", 'String'>
   readonly dateTime: Prisma.FieldRef<"Event", 'DateTime'>
+  readonly endDate: Prisma.FieldRef<"Event", 'DateTime'>
+  readonly recurrence: Prisma.FieldRef<"Event", 'String'>
+  readonly recurrenceDays: Prisma.FieldRef<"Event", 'Json'>
+  readonly isVirtual: Prisma.FieldRef<"Event", 'Boolean'>
   readonly category: Prisma.FieldRef<"Event", 'String'>
   readonly bannerUrl: Prisma.FieldRef<"Event", 'String'>
+  readonly images: Prisma.FieldRef<"Event", 'Json'>
+  readonly instagram: Prisma.FieldRef<"Event", 'String'>
+  readonly facebook: Prisma.FieldRef<"Event", 'String'>
+  readonly twitter: Prisma.FieldRef<"Event", 'String'>
   readonly status: Prisma.FieldRef<"Event", 'EventStatus'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Event", 'DateTime'>

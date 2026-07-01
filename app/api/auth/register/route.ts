@@ -1,10 +1,14 @@
 import { NextRequest } from "next/server";
+import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import { Resend } from "resend";
 import { db } from "@/db";
 import { registerSchema } from "@/lib/validations/auth";
-import { signToken, setAuthCookie } from "@/lib/auth";
 import { success, error } from "@/lib/api-response";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { VerifyEmail } from "@/emails/verify-email";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,16 +36,29 @@ export async function POST(request: NextRequest) {
       data: { name, email, passwordHash },
     });
 
-    const token = await signToken({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const tokenHash = await bcrypt.hash(rawToken, 10);
+
+    await db.emailVerificationToken.create({
+      data: {
+        userId: user.id,
+        tokenHash,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
     });
 
-    await setAuthCookie(token);
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const verificationUrl = `${appUrl}/api/auth/verify-email?token=${rawToken}`;
+
+    await resend.emails.send({
+      from: "PulsePass <noreply@pulsepass.app>",
+      to: email,
+      subject: "Verify your PulsePass email",
+      react: VerifyEmail({ name, verificationUrl }),
+    });
 
     return success({
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      message: "Account created. Check your email to verify your account.",
     }, 201);
   } catch (e) {
     console.error("Register error:", e);
