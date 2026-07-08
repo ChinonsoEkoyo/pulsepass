@@ -59,6 +59,7 @@ export const ModelName = {
   Order: 'Order',
   Payment: 'Payment',
   TicketInstance: 'TicketInstance',
+  PayoutAccount: 'PayoutAccount',
   RSVP: 'RSVP',
   Attendee: 'Attendee'
 } as const
@@ -160,6 +161,7 @@ export const OrderScalarFieldEnum = {
   userId: 'userId',
   eventId: 'eventId',
   amount: 'amount',
+  ticketQuantities: 'ticketQuantities',
   paymentStatus: 'paymentStatus',
   createdAt: 'createdAt'
 } as const
@@ -192,6 +194,20 @@ export const TicketInstanceScalarFieldEnum = {
 } as const
 
 export type TicketInstanceScalarFieldEnum = (typeof TicketInstanceScalarFieldEnum)[keyof typeof TicketInstanceScalarFieldEnum]
+
+
+export const PayoutAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  accountName: 'accountName',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayoutAccountScalarFieldEnum = (typeof PayoutAccountScalarFieldEnum)[keyof typeof PayoutAccountScalarFieldEnum]
 
 
 export const RSVPScalarFieldEnum = {
@@ -230,6 +246,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

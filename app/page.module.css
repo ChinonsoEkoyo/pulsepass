@@ -970,6 +970,10 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
     margin-top: -40px;
   }
 
+  .searchContainer .searchButton {
+    width: 100%;
+  }
+
   .hero {
     min-height: 60vh;
   }

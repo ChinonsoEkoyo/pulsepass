@@ -6,12 +6,6 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/page.css",
-      "static/chunks/app/page.js"
-    ],
     "/dashboard/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -24,23 +18,11 @@
       "static/css/app/dashboard/page.css",
       "static/chunks/app/dashboard/page.js"
     ],
-    "/dashboard/events/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/dashboard/events/page.css",
-      "static/chunks/app/dashboard/events/page.js"
-    ],
-    "/dashboard/bookings/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/bookings/page.css",
-      "static/chunks/app/dashboard/bookings/page.js"
-    ],
-    "/dashboard/account/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/dashboard/account/page.css",
-      "static/chunks/app/dashboard/account/page.js"
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
     ],
     "/events/page": [
       "static/chunks/webpack.js",
@@ -48,11 +30,11 @@
       "static/css/app/events/page.css",
       "static/chunks/app/events/page.js"
     ],
-    "/pricing/page": [
+    "/events/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/pricing/page.css",
-      "static/chunks/app/pricing/page.js"
+      "static/css/app/events/[id]/page.css",
+      "static/chunks/app/events/[id]/page.js"
     ]
   }
 }

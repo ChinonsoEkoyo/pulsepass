@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { initiatePayment } from "@/lib/flutterwave";
 import { success, error } from "@/lib/api-response";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { sendTicketPurchaseEmail } from "@/lib/email";
 import { z } from "zod";
 
 const schema = z.object({
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
         userId: user.userId,
         eventId,
         amount: totalAmount,
+        ticketQuantities: quantities,
         paymentStatus: "PENDING",
       },
     });
@@ -65,8 +67,7 @@ export async function POST(request: NextRequest) {
       });
 
       const ticketInstances = [];
-      for (const ttId of ticketTypeIds) {
-        const qty = quantities[ttId] || 0;
+      for (const [ttId, qty] of Object.entries(quantities)) {
         for (let i = 0; i < qty; i++) {
           ticketInstances.push({
             orderId: order.id,
@@ -78,6 +79,29 @@ export async function POST(request: NextRequest) {
       }
 
       await db.ticketInstance.createMany({ data: ticketInstances });
+
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const freeTickets = ticketInstances.map((t) => ({
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`${appUrl}/dashboard/tickets?ticket=${t.qrUuid}`)}`,
+        ticketTypeName: "General",
+      }));
+      const initAppUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const initEventDate = new Date(event.dateTime);
+      await sendTicketPurchaseEmail(
+        user.email,
+        user.name || user.email,
+        event.title,
+        initEventDate.toLocaleDateString("en-US", {
+          weekday: "long", month: "long", day: "numeric", year: "numeric",
+        }),
+        initEventDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+        event.venue,
+        order.id,
+        ticketInstances.length,
+        "Free",
+        freeTickets,
+        initAppUrl,
+      );
 
       return success({ orderId: order.id, paymentLink: null });
     }

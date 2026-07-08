@@ -28,8 +28,13 @@ export default function CheckoutPage() {
   const [event, setEvent] = useState<EventData | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
+    fetch("/api/auth/me")
+      .then((r) => setAuthenticated(r.ok))
+      .catch(() => setAuthenticated(false));
+
     fetch(`/api/events/${params.id}`)
       .then((r) => r.json())
       .then((json) => {
@@ -62,13 +67,18 @@ export default function CheckoutPage() {
       .map((t) => t.id);
 
     try {
+      const positiveQuantities: Record<string, number> = {};
+      for (const id of selectedIds) {
+        positiveQuantities[id] = quantities[id] || 0;
+      }
+
       const res = await fetch("/api/payments/initialize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           eventId: event.id,
           ticketTypeIds: selectedIds,
-          quantities,
+          quantities: positiveQuantities,
         }),
       });
 
@@ -92,6 +102,27 @@ export default function CheckoutPage() {
 
   if (!event) {
     return <div className={styles.page}><p>Loading...</p></div>;
+  }
+
+  if (authenticated === false) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <Link href="/" className={styles.logoLink}>
+            <Image src="/images/PulsePass-purple.png" alt="PulsePass" width={140} height={35} className={styles.logo} />
+          </Link>
+        </div>
+        <main className={styles.main}>
+          <div className={styles.authPrompt}>
+            <h2>Sign in to purchase tickets</h2>
+            <p>You need to be signed in to continue with your purchase.</p>
+            <Link href={`/login?redirect=/events/${params.id}/checkout`} className={styles.loginBtn}>
+              Sign In
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (

@@ -44,38 +44,37 @@ export async function POST(request: NextRequest) {
         data: { status: "COMPLETED" },
       });
 
-      await tx.order.update({
+      const order = await tx.order.update({
         where: { id: payment.orderId },
         data: { paymentStatus: "COMPLETED" },
       });
 
-      const order = await tx.order.findUnique({
-        where: { id: payment.orderId },
-        include: { event: { include: { ticketTypes: true } } },
-      });
+      const quantities = order.ticketQuantities as Record<string, number>;
+      const ticketInstances: {
+        orderId: string;
+        ticketTypeId: string;
+        qrUuid: string;
+        qrCode: string;
+      }[] = [];
 
-      if (order) {
-        const ticketTypes = order.event.ticketTypes;
-        const ticketInstances = [];
+      for (const [ttId, qty] of Object.entries(quantities)) {
+        if (qty < 1) continue;
+        const existingTickets = await tx.ticketInstance.findMany({
+          where: { orderId: order.id, ticketTypeId: ttId },
+        });
 
-        for (const tt of ticketTypes) {
-          const existingTickets = await tx.ticketInstance.findMany({
-            where: { orderId: order.id, ticketTypeId: tt.id },
+        for (let i = existingTickets.length; i < qty; i++) {
+          ticketInstances.push({
+            orderId: order.id,
+            ticketTypeId: ttId,
+            qrUuid: `${order.id}-${ttId}-${i}`,
+            qrCode: `PP-${order.id}-${ttId}-${i}`,
           });
-
-          for (let i = existingTickets.length; i < 1; i++) {
-            ticketInstances.push({
-              orderId: order.id,
-              ticketTypeId: tt.id,
-              qrUuid: `${order.id}-${tt.id}-${i}`,
-              qrCode: `PP-${order.id}-${tt.id}-${i}`,
-            });
-          }
         }
+      }
 
-        if (ticketInstances.length > 0) {
-          await tx.ticketInstance.createMany({ data: ticketInstances });
-        }
+      if (ticketInstances.length > 0) {
+        await tx.ticketInstance.createMany({ data: ticketInstances });
       }
     });
 

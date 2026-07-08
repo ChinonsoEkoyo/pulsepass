@@ -6,9 +6,12 @@ import { db } from "@/db";
 import { registerSchema } from "@/lib/validations/auth";
 import { success, error } from "@/lib/api-response";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { sendWelcomeEmail } from "@/lib/email";
 import { VerifyEmail } from "@/emails/verify-email";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "");
+
+const FROM_VERIFY = `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "noreply@resend.dev"}>`;
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,12 +53,18 @@ export async function POST(request: NextRequest) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const verificationUrl = `${appUrl}/api/auth/verify-email?token=${rawToken}`;
 
-    await resend.emails.send({
-      from: "PulsePass <noreply@pulsepass.app>",
-      to: email,
-      subject: "Verify your PulsePass email",
-      react: VerifyEmail({ name, verificationUrl }),
-    });
+    try {
+      await resend.emails.send({
+        from: FROM_VERIFY,
+        to: email,
+        subject: "Verify your PulsePass email",
+        react: VerifyEmail({ name, verificationUrl }),
+      });
+    } catch (e) {
+      console.error("Verification email error:", e);
+    }
+
+    await sendWelcomeEmail(email, name);
 
     return success({
       message: "Account created. Check your email to verify your account.",

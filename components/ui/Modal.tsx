@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback } from "react";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
@@ -11,8 +11,6 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children }: ModalProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -35,14 +33,12 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 
   return (
     <div className={styles.overlay} onClick={onClose} role="presentation">
-      <dialog
-        ref={dialogRef}
+      <div
         className={styles.dialog}
-        open
         onClick={(e) => e.stopPropagation()}
-        aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="modal-title"
       >
         <div className={styles.header}>
           <h2 id="modal-title" className={styles.title}>
@@ -58,7 +54,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           </button>
         </div>
         <div className={styles.body}>{children}</div>
-      </dialog>
+      </div>
     </div>
   );
 }

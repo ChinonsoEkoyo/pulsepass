@@ -976,6 +976,10 @@ input[type="date"].page_searchInput__bMdhk::-webkit-calendar-picker-indicator {
     margin-top: -40px;
   }
 
+  .page_searchContainer__pJPVb .page_searchButton__7fnJl {
+    width: 100%;
+  }
+
   .page_hero__7KFOs {
     min-height: 60vh;
   }

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin, Clock, CalendarDays } from "lucide-react";
+import { Suspense } from "react";
+import { ArrowLeft, MapPin, Clock } from "lucide-react";
 import { db } from "@/db";
 import MobileMenu from "@/components/MobileMenu";
 import { ImageCarousel } from "@/components/ImageCarousel";
 import { getCurrentUser } from "@/lib/auth";
+import OrderConfirmation from "./OrderConfirmation";
 import styles from "./page.module.css";
 
 async function getEvent(id: string) {
@@ -24,7 +26,11 @@ async function getRelatedEvents(category: string, excludeId: string) {
   });
 }
 
-export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EventDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const event = await getEvent(id);
   if (!event) notFound();
@@ -55,6 +61,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         </nav>
         <MobileMenu />
       </header>
+
+      <Suspense fallback={null}><OrderConfirmation /></Suspense>
 
       <div className={styles.banner}>
         <ImageCarousel
@@ -102,21 +110,21 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               <p className={styles.noTickets}>No tickets available.</p>
             ) : (
               <div className={styles.ticketList}>
-                {event.ticketTypes.map((ticket) => (
-                  <div key={ticket.id} className={styles.ticketCard}>
-                    <div className={styles.ticketInfo}>
-                      <h3>{ticket.name}</h3>
-                      <p className={styles.ticketQty}>
-                        {ticket.quantity} available
+                {event.ticketTypes.map((ticket) => {
+                  return (
+                    <div key={ticket.id} className={styles.ticketCard}>
+                      <div className={styles.ticketInfo}>
+                        <h3>{ticket.name}</h3>
+                        <p className={styles.ticketQty}>
+                          {ticket.quantity} available
+                        </p>
+                      </div>
+                      <p className={styles.ticketPrice}>
+                        {Number(ticket.price) === 0 ? "Free" : `₦${Number(ticket.price).toLocaleString()}`}
                       </p>
                     </div>
-                    <p className={styles.ticketPrice}>
-                      {Number(ticket.price) === 0
-                        ? "Free"
-                        : `₦${Number(ticket.price).toLocaleString()}`}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 

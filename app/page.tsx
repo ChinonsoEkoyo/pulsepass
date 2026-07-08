@@ -4,22 +4,31 @@ import { CalendarDays, MapPin } from "lucide-react";
 import { EventFilters } from "@/components/EventFilters";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/auth";
+import { isEventUpcoming, formatEventDate } from "@/lib/event-utils";
 import { blogPosts } from "@/data/blog-posts";
 import BlogCarousel from "@/components/BlogCarousel";
 import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
 
 async function getEvents() {
-  return db.event.findMany({
+  const events = await db.event.findMany({
     include: { ticketTypes: true },
     orderBy: { dateTime: "asc" },
-    take: 9,
+    take: 30,
   });
+
+  return events.filter((e) =>
+    isEventUpcoming(e.dateTime, e.endDate, e.recurrence, (e.recurrenceDays as number[]) || [])
+  ).slice(0, 9);
 }
 
 export default async function Home() {
   const [events, user] = await Promise.all([getEvents(), getCurrentUser()]);
   const isLoggedIn = !!user;
+
+  const eventDates = events.map((e) =>
+    formatEventDate(e.dateTime, e.endDate, e.recurrence, (e.recurrenceDays as number[]) || [])
+  );
 
   return (
     <div className={styles.page}>
@@ -113,7 +122,7 @@ export default async function Home() {
         </div>
 
         <div className={styles.eventGrid}>
-          {events.map((event) => (
+          {events.map((event, i) => (
             <Link key={event.id} href={`/events/${event.id}`} className={styles.eventCard}>
               <div className={styles.eventCardImage} style={(event.images as string[])?.length ? { backgroundImage: `url(${(event.images as string[])[0]})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}>
                 {(!(event.images as string[])?.length) && <div className={styles.eventCardImagePlaceholder}></div>}
@@ -128,12 +137,8 @@ export default async function Home() {
                 <div className={styles.eventCardMeta}>
                   <CalendarDays size={14} className={styles.metaIcon} />
                   <p className={styles.eventCardDate}>
-                    {new Date(event.dateTime).toLocaleDateString("en-US", {
-                      weekday: "short", month: "long", day: "numeric", year: "numeric",
-                    })}
-                    <span className={styles.eventCardTime}>
-                      {new Date(event.dateTime).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
-                    </span>
+                    {eventDates[i].dateText}
+                    <span className={styles.eventCardTime}>{eventDates[i].timeText}</span>
                   </p>
                 </div>
               </div>

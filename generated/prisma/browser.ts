@@ -58,6 +58,11 @@ export type Payment = Prisma.PaymentModel
  */
 export type TicketInstance = Prisma.TicketInstanceModel
 /**
+ * Model PayoutAccount
+ * 
+ */
+export type PayoutAccount = Prisma.PayoutAccountModel
+/**
  * Model RSVP
  * 
  */

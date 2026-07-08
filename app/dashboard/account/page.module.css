@@ -97,6 +97,67 @@
   opacity: 0.9;
 }
 
+.payoutsCard {
+  background-color: var(--color-surface);
+  border-radius: 16px;
+  border: 1px solid var(--color-outline-variant);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payoutsCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+}
+
+.payoutsCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.payoutDetail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payoutDetailLabel {
+  font-size: 0.8rem;
+  color: var(--color-on-surface-variant);
+}
+
+.payoutDetailValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.payoutsEditBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0;
+  font-family: inherit;
+  align-self: flex-start;
+}
+
+.payoutsEditBtn:hover {
+  text-decoration: underline;
+}
+
 /* ── Settings Tab ── */
 
 .settingsCard {
@@ -263,9 +324,9 @@
 .dataTable td span { font-size: 0.75rem; color: var(--color-on-surface-variant); }
 
 .statusPill { padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; border: 1px solid transparent; }
-.statusConfirmed { background-color: var(--color-primary-container); color: var(--color-primary); border-color: var(--color-primary); }
-.statusPending { background-color: var(--color-tertiary-container); color: var(--color-tertiary); border-color: var(--color-tertiary); }
-.statusFailed { background-color: var(--color-error-container); color: #b91c1c; border-color: #fca5a5; }
+.statusConfirmed { background-color: var(--color-status-confirmed-bg); color: var(--color-status-confirmed-text); border-color: var(--color-status-confirmed-border); }
+.statusPending { background-color: var(--color-status-pending-bg); color: var(--color-status-pending-text); border-color: var(--color-status-pending-border); }
+.statusFailed { background-color: var(--color-status-failed-bg); color: var(--color-status-failed-text); border-color: var(--color-status-failed-border); }
 
 .emptyState {
   display: flex;

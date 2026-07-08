@@ -38,7 +38,7 @@ Clearly outline what you're looking for: topic, format, audience size, and expec
 While exposure matters, professional speakers appreciate honorariums, travel coverage, and networking opportunities.
 
 Remember, the best speaker fits your audience's needs and your event's theme. Take time to research and reach out personally.`,
-    image: "/images/Concertimage.png",
+    image: "/images/blog-conference-speaker.jpg",
     date: "12 Mar 2026",
     author: "Jhon Doe",
     category: "Event Planning",
@@ -71,7 +71,7 @@ Modern ticketing platforms provide organizers with real-time data on attendance 
 Ticketing is no longer a standalone function. It's integrated with marketing, CRM, access control, and post-event analytics.
 
 PulsePass is at the forefront of this revolution, providing African event organizers with world-class ticketing infrastructure that's tailored to local needs.`,
-    image: "/images/Concertimage.png",
+    image: "/images/blog-digital-ticketing.jpg",
     date: "10 Jun 2026",
     author: "PulsePass Team",
     category: "Technology",
@@ -108,7 +108,7 @@ Publish blog posts, videos, and podcasts related to your event theme. Position y
 Use retargeting ads to reach people who visited your event page but didn't register. These warm leads convert at higher rates.
 
 By combining these strategies and tracking your results, you can create a marketing engine that consistently fills seats.`,
-    image: "/images/Concertimage.png",
+    image: "/images/blog-event-marketing.jpg",
     date: "5 Jun 2026",
     author: "PulsePass Team",
     category: "Marketing",
@@ -144,7 +144,7 @@ Does the venue's aesthetic align with your event's theme and brand? A mismatch c
 Ask about contingency plans for bad weather (for outdoor venues) and technical failures.
 
 Take your time visiting multiple venues, ask for references, and read reviews before making your decision.`,
-    image: "/images/Concertimage.png",
+    image: "/images/blog-event-venue.jpg",
     date: "28 May 2026",
     author: "PulsePass Team",
     category: "Event Planning",
@@ -180,7 +180,7 @@ Refund and Transfer Policies
 Clear policies build trust. Consider offering refundable tickets at a premium price point.
 
 PulsePass provides all the tools you need to implement these strategies with ease, from dynamic pricing to multi-tier ticketing and real-time analytics.`,
-    image: "/images/Concertimage.png",
+    image: "/images/blog-ticket-revenue.jpg",
     date: "15 May 2026",
     author: "PulsePass Team",
     category: "Revenue",
@@ -214,7 +214,7 @@ Generate excitement for your next event with a "Save the Date" announcement. Off
 Review attendance data, ticket sales patterns, and feedback to identify what worked and what needs improvement.
 
 Post-event engagement turns one-time attendees into loyal community members and repeat customers.`,
-    image: "/images/Concertimage.png",
+    image: "/images/blog-community-engagement.jpg",
     date: "2 May 2026",
     author: "PulsePass Team",
     category: "Community",

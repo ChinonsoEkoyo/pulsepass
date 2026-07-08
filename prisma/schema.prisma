@@ -50,6 +50,7 @@ model User {
   attendees        Attendee[]
   resetTokens      PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  payoutAccounts   PayoutAccount[]
 
   @@map("users")
 }
@@ -125,12 +126,13 @@ model TicketType {
 }
 
 model Order {
-  id            String        @id @default(cuid())
-  userId        String        @map("user_id")
-  eventId       String        @map("event_id")
-  amount        Decimal       @db.Decimal(10, 2)
-  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
-  createdAt     DateTime      @default(now()) @map("created_at")
+  id               String        @id @default(cuid())
+  userId           String        @map("user_id")
+  eventId          String        @map("event_id")
+  amount           Decimal       @db.Decimal(10, 2)
+  ticketQuantities Json          @default("{}") @map("ticket_quantities")
+  paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
+  createdAt        DateTime      @default(now()) @map("created_at")
 
   user           User            @relation(fields: [userId], references: [id])
   event          Event           @relation(fields: [eventId], references: [id])
@@ -169,6 +171,21 @@ model TicketInstance {
   attendee   Attendee?
 
   @@map("ticket_instances")
+}
+
+model PayoutAccount {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  bankName      String   @map("bank_name")
+  accountNumber String   @map("account_number")
+  accountName   String   @map("account_name")
+  currency      String   @default("NGN")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("payout_accounts")
 }
 
 model RSVP {

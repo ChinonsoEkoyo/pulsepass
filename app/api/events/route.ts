@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/auth";
 import { success, error } from "@/lib/api-response";
+import { sendEventCreatedEmail } from "@/lib/email";
 import { z } from "zod";
 
 const createEventSchema = z.object({
@@ -68,6 +69,17 @@ export async function POST(request: NextRequest) {
       },
       include: { ticketTypes: true },
     });
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    await sendEventCreatedEmail(
+      user.email,
+      user.name || user.email,
+      event.title,
+      new Date(event.dateTime).toLocaleDateString("en-US", {
+        weekday: "long", month: "long", day: "numeric", year: "numeric",
+      }),
+      `${appUrl}/events/${event.id}`,
+    );
 
     return success(event, 201);
   } catch (e) {

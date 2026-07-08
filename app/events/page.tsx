@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { CalendarDays, MapPin } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
 import { getCurrentUser } from "@/lib/auth";
+import { isEventUpcoming, formatEventDate } from "@/lib/event-utils";
 import styles from "./page.module.css";
 
 interface SearchParams {
@@ -51,8 +52,16 @@ export default async function EventsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const sp = await searchParams;
-  const events = await getEvents(sp);
+  const rawEvents = await getEvents(sp);
   const hasFilters = !!(sp.search || sp.location || sp.date || sp.type || sp.category);
+  const events = hasFilters
+    ? rawEvents
+    : rawEvents.filter((e) =>
+        isEventUpcoming(e.dateTime, e.endDate, e.recurrence, (e.recurrenceDays as number[]) || [])
+      );
+  const eventDates = events.map((e) =>
+    formatEventDate(e.dateTime, e.endDate, e.recurrence, (e.recurrenceDays as number[]) || [])
+  );
   const user = await getCurrentUser();
 
   return (
@@ -117,7 +126,7 @@ export default async function EventsPage({
           </div>
         ) : (
           <div className={styles.grid}>
-            {events.map((event) => (
+            {events.map((event, i) => (
               <Link key={event.id} href={`/events/${event.id}`} className={styles.card}>
                 <div className={styles.eventCardImage} style={(event.images as string[])?.length ? { backgroundImage: `url(${(event.images as string[])[0]})`, backgroundSize: "cover", backgroundPosition: "center" } : {}}>
                   {(!(event.images as string[])?.length) && <div className={styles.eventCardImagePlaceholder}></div>}
@@ -132,12 +141,8 @@ export default async function EventsPage({
                   <div className={styles.eventCardMeta}>
                     <CalendarDays size={14} className={styles.metaIcon} />
                     <p className={styles.cardDate}>
-                      {new Date(event.dateTime).toLocaleDateString("en-US", {
-                        weekday: "short", month: "long", day: "numeric", year: "numeric",
-                      })}
-                      <span className={styles.cardTime}>
-                        {new Date(event.dateTime).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
-                      </span>
+                      {eventDates[i].dateText}
+                      <span className={styles.cardTime}>{eventDates[i].timeText}</span>
                     </p>
                   </div>
                 </div>

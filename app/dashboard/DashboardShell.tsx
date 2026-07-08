@@ -4,14 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, Ticket, CalendarDays, User, Menu, X } from "lucide-react";
+import { LayoutGrid, CalendarDays, SquareCheckBig, User, Menu, X, Tickets } from "lucide-react";
 import SignOutButton from "@/components/auth/SignOutButton";
 import styles from "./layout.module.css";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
-  { href: "/dashboard/events", label: "Events", icon: Ticket },
-  { href: "/dashboard/bookings", label: "Bookings", icon: CalendarDays },
+  { href: "/dashboard/events", label: "Events", icon: CalendarDays },
+  { href: "/dashboard/bookings", label: "Bookings", icon: SquareCheckBig },
+  { href: "/dashboard/tickets", label: "My Tickets", icon: Tickets },
   { href: "/dashboard/account", label: "Account", icon: User },
 ];
 
@@ -88,7 +89,7 @@ export default function DashboardShell({
                 ))}
               </nav>
               <div className={styles.mobileOverlayFooter}>
-                <SignOutButton />
+                <SignOutButton style={{ color: "#fff" }} />
               </div>
             </div>
           </div>

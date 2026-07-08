@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { db } from "@/db";
 import { error, success } from "@/lib/api-response";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { sendPasswordChangedEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,6 +45,8 @@ export async function POST(request: NextRequest) {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
+    const user = await db.user.findUnique({ where: { id: matchedToken.userId } });
+
     await db.$transaction([
       db.user.update({
         where: { id: matchedToken.userId },
@@ -54,6 +57,10 @@ export async function POST(request: NextRequest) {
         data: { usedAt: new Date() },
       }),
     ]);
+
+    if (user) {
+      await sendPasswordChangedEmail(user.email, user.name);
+    }
 
     return success({ message: "Password reset successfully" });
   } catch (e) {

@@ -392,6 +392,7 @@ export const ModelName = {
   Order: 'Order',
   Payment: 'Payment',
   TicketInstance: 'TicketInstance',
+  PayoutAccount: 'PayoutAccount',
   RSVP: 'RSVP',
   Attendee: 'Attendee'
 } as const
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "event" | "ticketType" | "order" | "payment" | "ticketInstance" | "rSVP" | "attendee"
+    modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "event" | "ticketType" | "order" | "payment" | "ticketInstance" | "payoutAccount" | "rSVP" | "attendee"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1005,6 +1006,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PayoutAccount: {
+      payload: Prisma.$PayoutAccountPayload<ExtArgs>
+      fields: Prisma.PayoutAccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PayoutAccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PayoutAccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>
+        }
+        findFirst: {
+          args: Prisma.PayoutAccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PayoutAccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>
+        }
+        findMany: {
+          args: Prisma.PayoutAccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>[]
+        }
+        create: {
+          args: Prisma.PayoutAccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>
+        }
+        createMany: {
+          args: Prisma.PayoutAccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PayoutAccountCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>[]
+        }
+        delete: {
+          args: Prisma.PayoutAccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>
+        }
+        update: {
+          args: Prisma.PayoutAccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.PayoutAccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PayoutAccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PayoutAccountUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>[]
+        }
+        upsert: {
+          args: Prisma.PayoutAccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayoutAccountPayload>
+        }
+        aggregate: {
+          args: Prisma.PayoutAccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePayoutAccount>
+        }
+        groupBy: {
+          args: Prisma.PayoutAccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PayoutAccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PayoutAccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PayoutAccountCountAggregateOutputType> | number
+        }
+      }
+    }
     RSVP: {
       payload: Prisma.$RSVPPayload<ExtArgs>
       fields: Prisma.RSVPFieldRefs
@@ -1273,6 +1348,7 @@ export const OrderScalarFieldEnum = {
   userId: 'userId',
   eventId: 'eventId',
   amount: 'amount',
+  ticketQuantities: 'ticketQuantities',
   paymentStatus: 'paymentStatus',
   createdAt: 'createdAt'
 } as const
@@ -1305,6 +1381,20 @@ export const TicketInstanceScalarFieldEnum = {
 } as const
 
 export type TicketInstanceScalarFieldEnum = (typeof TicketInstanceScalarFieldEnum)[keyof typeof TicketInstanceScalarFieldEnum]
+
+
+export const PayoutAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  accountName: 'accountName',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayoutAccountScalarFieldEnum = (typeof PayoutAccountScalarFieldEnum)[keyof typeof PayoutAccountScalarFieldEnum]
 
 
 export const RSVPScalarFieldEnum = {
@@ -1343,6 +1433,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1640,6 +1737,7 @@ export type GlobalOmitConfig = {
   order?: Prisma.OrderOmit
   payment?: Prisma.PaymentOmit
   ticketInstance?: Prisma.TicketInstanceOmit
+  payoutAccount?: Prisma.PayoutAccountOmit
   rSVP?: Prisma.RSVPOmit
   attendee?: Prisma.AttendeeOmit
 }

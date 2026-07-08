@@ -37,6 +37,17 @@
   --color-surface-container-high: hsl(300, 14%, 91%);
   --color-surface-container-highest: hsl(290, 11%, 89%);
 
+  /* === Status Pill Colors === */
+  --color-status-confirmed-bg: #E1FCEF;
+  --color-status-confirmed-text: #14804A;
+  --color-status-confirmed-border: #38A06C;
+  --color-status-pending-bg: #FCF2E6;
+  --color-status-pending-text: #AA5B00;
+  --color-status-pending-border: #C97A20;
+  --color-status-failed-bg: #FFD3D3;
+  --color-status-failed-text: #AA0000;
+  --color-status-failed-border: #FF5D5D;
+
   /* === Custom Surface Colors === */
   --color-surface-search: #261F8E;
   --color-upcoming-title: #242565;

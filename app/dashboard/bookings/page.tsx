@@ -13,7 +13,7 @@ export default async function BookingsPage() {
   const userId = user?.userId;
 
   const orders = !userId ? [] : await db.order.findMany({
-    where: { userId },
+    where: { event: { organizerId: userId } },
     include: { event: true },
     orderBy: { createdAt: "desc" },
   });
