@@ -4,11 +4,13 @@ import { EventCreatedEmail } from "@/emails/event-created";
 import { TicketPurchaseEmail } from "@/emails/ticket-purchase";
 import { PasswordChangedEmail } from "@/emails/password-changed";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "");
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
-const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@resend.dev";
-const FROM_NAME = process.env.FROM_NAME || "PulsePass";
-const FROM = `${FROM_NAME} <${FROM_EMAIL}>`;
+function getFromEmail() {
+  return `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "noreply@resend.dev"}>`;
+}
 
 async function send(params: { to: string; subject: string; react: React.ReactElement }) {
   if (!process.env.RESEND_API_KEY) {
@@ -16,8 +18,8 @@ async function send(params: { to: string; subject: string; react: React.ReactEle
     return;
   }
   try {
-    const result = await resend.emails.send({
-      from: FROM,
+    const result = await getResend().emails.send({
+      from: getFromEmail(),
       to: params.to,
       subject: params.subject,
       react: params.react,

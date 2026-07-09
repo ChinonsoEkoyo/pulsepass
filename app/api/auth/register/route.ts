@@ -9,9 +9,11 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { sendWelcomeEmail } from "@/lib/email";
 import { VerifyEmail } from "@/emails/verify-email";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "");
-
 const FROM_VERIFY = `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "noreply@resend.dev"}>`;
+
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest) {
     const verificationUrl = `${appUrl}/api/auth/verify-email?token=${rawToken}`;
 
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: FROM_VERIFY,
         to: email,
         subject: "Verify your PulsePass email",
