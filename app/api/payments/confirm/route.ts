@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/auth";
+import { getAppUrl } from "@/lib/app-url";
 import { verifyTransaction } from "@/lib/flutterwave";
 import { sendTicketPurchaseEmail } from "@/lib/email";
 import { success, error } from "@/lib/api-response";
@@ -103,14 +104,14 @@ export async function POST(request: NextRequest) {
       include: { ticketType: true },
     });
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getAppUrl(request);
     const tickets = createdTickets.map((t) => ({
       qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`${appUrl}/dashboard/tickets?ticket=${t.qrUuid}`)}`,
       ticketTypeName: t.ticketType.name,
     }));
 
     const eventDate = new Date(order.event.dateTime);
-    const sendAppUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const sendAppUrl = getAppUrl(request);
     await sendTicketPurchaseEmail(
       order.user.email,
       user.name || user.email,

@@ -5,6 +5,7 @@ import { Resend } from "resend";
 import { db } from "@/db";
 import { registerSchema } from "@/lib/validations/auth";
 import { success, error } from "@/lib/api-response";
+import { getAppUrl } from "@/lib/app-url";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { sendWelcomeEmail } from "@/lib/email";
 import { VerifyEmail } from "@/emails/verify-email";
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getAppUrl(request);
     const verificationUrl = `${appUrl}/api/auth/verify-email?token=${rawToken}`;
 
     try {
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
       console.error("Verification email error:", e);
     }
 
-    await sendWelcomeEmail(email, name);
+    await sendWelcomeEmail(email, name, appUrl);
 
     return success({
       message: "Account created. Check your email to verify your account.",

@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/auth";
 import { success, error } from "@/lib/api-response";
+import { getAppUrl } from "@/lib/app-url";
 import { sendEventCreatedEmail } from "@/lib/email";
 import { z } from "zod";
 
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       include: { ticketTypes: true },
     });
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getAppUrl(request);
     await sendEventCreatedEmail(
       user.email,
       user.name || user.email,

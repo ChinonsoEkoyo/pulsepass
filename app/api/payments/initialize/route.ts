@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { getCurrentUser } from "@/lib/auth";
+import { getAppUrl } from "@/lib/app-url";
 import { initiatePayment } from "@/lib/flutterwave";
 import { success, error } from "@/lib/api-response";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -80,12 +81,12 @@ export async function POST(request: NextRequest) {
 
       await db.ticketInstance.createMany({ data: ticketInstances });
 
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const appUrl = getAppUrl(request);
       const freeTickets = ticketInstances.map((t) => ({
         qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`${appUrl}/dashboard/tickets?ticket=${t.qrUuid}`)}`,
         ticketTypeName: "General",
       }));
-      const initAppUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const initAppUrl = getAppUrl(request);
       const initEventDate = new Date(event.dateTime);
       await sendTicketPurchaseEmail(
         user.email,
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
       amount: totalAmount,
       email: user.email,
       name: user.email,
-      redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/events/${eventId}?order_id=${order.id}`,
+      redirectUrl: `${getAppUrl(request)}/events/${eventId}?order_id=${order.id}`,
     });
 
     if (paymentResult.status !== "success" || !paymentResult.data) {
