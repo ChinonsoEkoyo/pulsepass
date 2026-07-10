@@ -1,31 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadImage } from "@/lib/cloudinary";
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const files = formData.getAll("images") as File[];
 
+    if (files.length === 0) {
+      return NextResponse.json({ error: "No images provided" }, { status: 400 });
+    }
+
     if (files.length > 4) {
       return NextResponse.json({ error: "Maximum 4 images allowed" }, { status: 400 });
     }
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "events");
-    await mkdir(uploadDir, { recursive: true });
+    if (!process.env.CLOUDINARY_URL) {
+      return NextResponse.json({ error: "Image upload not configured" }, { status: 500 });
+    }
 
     const urls: string[] = [];
 
     for (const file of files) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      const ext = file.name.split(".").pop() || "jpg";
-      const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const filepath = path.join(uploadDir, filename);
-
-      await writeFile(filepath, buffer);
-      urls.push(`/uploads/events/${filename}`);
+      const url = await uploadImage(file);
+      urls.push(url);
     }
 
     return NextResponse.json({ data: urls }, { status: 200 });

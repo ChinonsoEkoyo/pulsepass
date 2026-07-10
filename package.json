@@ -17,6 +17,7 @@
     "@react-email/render": "^2.0.9",
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.5.1",
+    "cloudinary": "^2.10.0",
     "jose": "^6.0.10",
     "lucide-react": "^1.21.0",
     "next": "^15.3.1",
