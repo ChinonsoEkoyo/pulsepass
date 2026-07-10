@@ -1,6 +1,9 @@
 import { v2 as cloudinary } from "cloudinary";
 
-cloudinary.config();
+const url = process.env.CLOUDINARY_URL;
+if (url) {
+  cloudinary.config(url);
+}
 
 export async function uploadImage(file: File): Promise<string> {
   const bytes = await file.arrayBuffer();
