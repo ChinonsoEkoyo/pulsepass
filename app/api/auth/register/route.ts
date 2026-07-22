@@ -67,7 +67,11 @@ export async function POST(request: NextRequest) {
       console.error("Verification email error:", e);
     }
 
-    await sendWelcomeEmail(email, name, appUrl);
+    try {
+      await sendWelcomeEmail(email, name, appUrl);
+    } catch (e) {
+      console.error("Welcome email error:", e);
+    }
 
     return success({
       message: "Account created. Check your email to verify your account.",
