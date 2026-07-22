@@ -661,7 +661,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   margin: 0 -160px;
   display: flex;
   flex-direction: column;
-  min-height: 400px;
+  min-height: 320px;
 }
 
 .footerGrid {

@@ -9,7 +9,7 @@ function getResend() {
 }
 
 function getFromEmail() {
-  return `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "noreply@resend.dev"}>`;
+  return `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "onboarding@resend.dev"}>`;
 }
 
 async function send(params: { to: string; subject: string; react: React.ReactElement }) {

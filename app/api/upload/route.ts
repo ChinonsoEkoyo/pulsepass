@@ -15,7 +15,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (!process.env.CLOUDINARY_URL) {
-      return NextResponse.json({ error: "Image upload not configured" }, { status: 500 });
+      console.error("CLOUDINARY_URL is missing. Available CLOUDINARY vars:", Object.keys(process.env).filter(k => k.toUpperCase().includes("CLOUDINARY")));
+      return NextResponse.json({ error: "Image upload not configured - CLOUDINARY_URL env var missing on Vercel" }, { status: 500 });
     }
 
     const urls: string[] = [];

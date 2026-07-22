@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       totalAmount += Number(ticketType.price) * qty;
     }
 
-    if (totalAmount <= 0) return error("Invalid amount");
+    if (totalAmount < 0) return error("Invalid amount");
 
     const txRef = `PP-${Date.now()}-${user.userId.slice(0, 8)}`;
 

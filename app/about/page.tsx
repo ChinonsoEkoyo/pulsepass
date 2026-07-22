@@ -17,6 +17,14 @@ export default function AboutPage() {
       <p style={{ fontSize: "16px", lineHeight: "1.6", color: "#333" }}>
         PulsePass is built for the African market, with local payment integrations, real-time analytics, and tools designed for the unique needs of event organizers across the continent.
       </p>
+      <hr style={{ margin: "2rem 0", border: "none", borderTop: "1px solid #e5e7eb" }} />
+      <h2 style={{ fontSize: "24px", fontWeight: 700, color: "#242565", marginBottom: "1rem" }}>Contact Us</h2>
+      <p style={{ fontSize: "16px", lineHeight: "1.6", color: "#333", marginBottom: "1rem" }}>
+        Have a question or need help? We&apos;d love to hear from you.
+      </p>
+      <p style={{ fontSize: "16px", lineHeight: "1.6", color: "#333", marginBottom: "0.5rem" }}><strong>Email:</strong> support@pulsepass.com</p>
+      <p style={{ fontSize: "16px", lineHeight: "1.6", color: "#333", marginBottom: "0.5rem" }}><strong>Phone:</strong> +234 800 PULSEPASS</p>
+      <p style={{ fontSize: "16px", lineHeight: "1.6", color: "#333" }}><strong>Address:</strong> Lagos, Nigeria</p>
     </div>
   );
 }

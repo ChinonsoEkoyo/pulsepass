@@ -162,7 +162,11 @@ export default async function EventDetailPage({
                     </div>
                     <div className={styles.relatedCardFooter}>
                       <span className={styles.relatedPrice}>
-                        {reMinPrice > 0 ? `From ₦${reMinPrice}` : "Free"}
+                        {(() => {
+                          const prices = re.ticketTypes.map((t) => Number(t.price));
+                          const min = prices.length > 0 ? Math.min(...prices) : 0;
+                          return min > 0 ? `From ₦${min.toLocaleString()}` : "Free";
+                        })()}
                       </span>
                     </div>
                   </Link>

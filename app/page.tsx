@@ -144,9 +144,11 @@ export default async function Home() {
               </div>
               <div className={styles.eventCardFooter}>
                 <span className={styles.eventPrice}>
-                  {event.ticketTypes.length > 0
-                    ? `From ₦${Math.min(...event.ticketTypes.map((t) => Number(t.price)))}`
-                    : "Free"}
+                  {(() => {
+                    const prices = event.ticketTypes.map((t) => Number(t.price));
+                    const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+                    return minPrice > 0 ? `From ₦${minPrice.toLocaleString()}` : "Free";
+                  })()}
                 </span>
               </div>
             </Link>
@@ -195,7 +197,7 @@ export default async function Home() {
               className={styles.footerLogo}
             />
             <p className={styles.footerDesc}>
-              PulsePass is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+              PulsePass is a self-service event ticketing platform for Africa that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
             </p>
             <div className={styles.socialRow}>
               <a href="#" className={styles.socialIcon}>
@@ -225,8 +227,6 @@ export default async function Home() {
               <Link href="/pricing">Pricing</Link>
               <Link href="/how-it-works">How it Works</Link>
               <Link href="/blog">Blog</Link>
-              <Link href="/contact">Contact Us</Link>
-              <Link href="/help">Help Center</Link>
               <Link href="/terms">Terms & Conditions</Link>
               <Link href="/privacy">Privacy Policy</Link>
             </nav>

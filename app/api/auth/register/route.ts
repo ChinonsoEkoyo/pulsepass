@@ -10,7 +10,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { sendWelcomeEmail } from "@/lib/email";
 import { VerifyEmail } from "@/emails/verify-email";
 
-const FROM_VERIFY = `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "noreply@resend.dev"}>`;
+const FROM_VERIFY = `${process.env.FROM_NAME || "PulsePass"} <${process.env.FROM_EMAIL || "onboarding@resend.dev"}>`;
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);

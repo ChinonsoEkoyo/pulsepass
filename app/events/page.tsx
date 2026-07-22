@@ -148,9 +148,11 @@ export default async function EventsPage({
                 </div>
                 <div className={styles.cardFooter}>
                   <span className={styles.price}>
-                    {event.ticketTypes.length > 0
-                      ? `From ₦${Math.min(...event.ticketTypes.map((t) => Number(t.price)))}`
-                      : "Free"}
+                    {(() => {
+                      const prices = event.ticketTypes.map((t) => Number(t.price));
+                      const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+                      return minPrice > 0 ? `From ₦${minPrice.toLocaleString()}` : "Free";
+                    })()}
                   </span>
                 </div>
               </Link>
