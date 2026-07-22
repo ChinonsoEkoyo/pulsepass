@@ -14,12 +14,14 @@ export default function OrderConfirmation() {
   const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
   const [ticketCount, setTicketCount] = useState(0);
   const [isFree, setIsFree] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!orderId) return;
 
     if (flwStatus && flwStatus !== "successful" && flwStatus !== "completed") {
       setStatus("error");
+      setErrorMessage(`Payment status: ${flwStatus}`);
       return;
     }
 
@@ -32,17 +34,21 @@ export default function OrderConfirmation() {
         status: flwStatus || undefined,
       }),
     })
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.data?.status === "COMPLETED") {
+      .then(async (r) => {
+        const json = await r.json();
+        if (r.ok && json.data?.status === "COMPLETED") {
           setStatus("success");
           setTicketCount(json.data.ticketCount || 0);
           setIsFree(json.data.isFree || false);
         } else {
           setStatus("error");
+          setErrorMessage(json.error || "Payment could not be verified");
         }
       })
-      .catch(() => setStatus("error"));
+      .catch(() => {
+        setStatus("error");
+        setErrorMessage("Network error — please check your connection");
+      });
   }, [orderId, transactionId, flwStatus]);
 
   if (!orderId) return null;
@@ -95,8 +101,8 @@ export default function OrderConfirmation() {
       {status === "error" && (
         <>
           <XCircle size={20} />
-          <span>Payment could not be verified. Please contact support.</span>
-          <Link href={`/dashboard/account?order_id=${orderId}`} style={{
+          <span>{errorMessage}</span>
+          <Link href="/dashboard/tickets" style={{
             marginLeft: "auto",
             padding: "0.4rem 1rem",
             backgroundColor: "#b91c1c",
@@ -106,7 +112,7 @@ export default function OrderConfirmation() {
             fontSize: "0.8rem",
             whiteSpace: "nowrap",
           }}>
-            Check order status
+            Check my tickets
           </Link>
         </>
       )}

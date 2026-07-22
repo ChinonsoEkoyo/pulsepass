@@ -9,14 +9,14 @@ import { z } from "zod";
 
 const schema = z.object({
   orderId: z.string(),
-  transactionId: z.number().optional(),
+  transactionId: z.coerce.number().optional(),
   status: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user) return error("Unauthorized", 401);
+    if (!user) return error("Unauthorized — please sign in again", 401);
 
     const body = await request.json();
     const parsed = schema.safeParse(body);
@@ -42,24 +42,26 @@ export async function POST(request: NextRequest) {
       try {
         const verification = await verifyTransaction(transactionId);
         paymentVerified = verification.status === "success" && verification.data?.status === "successful";
-      } catch {
-        console.warn(`Flutterwave verifyTransaction failed for txn ${transactionId} — trusting redirect`);
+        if (!paymentVerified) {
+          console.warn(`Flutterwave verification returned status=${verification.status} data_status=${verification.data?.status} for txn ${transactionId}`);
+        }
+      } catch (e) {
+        console.warn(`Flutterwave verifyTransaction threw for txn ${transactionId}:`, e);
       }
     }
 
-    // Fallback 1: status param from redirect URL
     if (!paymentVerified && (status === "successful" || status === "completed")) {
+      console.log(`Trusting payment for order ${orderId} based on status param: ${status}`);
       paymentVerified = true;
     }
 
-    // Fallback 2: transactionId present means user was redirected back from Flutterwave
     if (!paymentVerified && transactionId) {
       console.log(`Trusting payment for order ${orderId} based on transactionId ${transactionId}`);
       paymentVerified = true;
     }
 
     if (!paymentVerified) {
-      return error("Payment not confirmed", 400);
+      return error("Payment not confirmed — no verification data available", 400);
     }
 
     const quantities = order.ticketQuantities as Record<string, number>;
