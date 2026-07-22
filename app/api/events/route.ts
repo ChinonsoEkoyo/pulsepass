@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         weekday: "long", month: "long", day: "numeric", year: "numeric",
       }),
       `${appUrl}/events/${event.id}`,
-    );
+    ).catch((e) => console.error("Email send failed:", e));
 
     return success(event, 201);
   } catch (e) {

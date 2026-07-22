@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       totalAmount,
       tickets,
       sendAppUrl,
-    );
+    ).catch((e) => console.error("Email send failed:", e));
 
     return success({
       orderId: order.id,

@@ -26,13 +26,11 @@ async function send(params: { to: string; subject: string; react: React.ReactEle
     });
     if (result.error) {
       console.error("Email send error:", JSON.stringify(result.error));
-      throw new Error(result.error.message || JSON.stringify(result.error));
     } else {
       console.log(`Email sent to ${params.to}: ${params.subject}`);
     }
   } catch (e) {
     console.error("Email send exception:", e);
-    throw e;
   }
 }
 

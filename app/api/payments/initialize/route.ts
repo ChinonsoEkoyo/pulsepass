@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
         "Free",
         freeTickets,
         initAppUrl,
-      );
+      ).catch((e) => console.error("Email send failed:", e));
 
       return success({ orderId: order.id, paymentLink: null });
     }

@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       "Free",
       claimTickets,
       claimAppUrl,
-    );
+    ).catch((e) => console.error("Email send failed:", e));
 
     return success({ orderId: order.id, ticket: ticketInstance }, 201);
   } catch (e) {
