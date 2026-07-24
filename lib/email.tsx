@@ -14,7 +14,7 @@ function getFromEmail() {
 
 async function send(params: { to: string; subject: string; react: React.ReactElement }) {
   if (!process.env.RESEND_API_KEY) {
-    console.log("Email not sent: RESEND_API_KEY not configured");
+    console.error("Email not sent: RESEND_API_KEY is empty/undefined");
     return;
   }
   try {

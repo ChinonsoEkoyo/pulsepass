@@ -19,10 +19,12 @@ export async function POST(request: NextRequest) {
     if (!user) return error("Unauthorized — please sign in again", 401);
 
     const body = await request.json();
+    console.log("Confirm request body:", JSON.stringify(body));
     const parsed = schema.safeParse(body);
     if (!parsed.success) return error(parsed.error.errors[0].message);
 
     const { orderId, transactionId, status } = parsed.data;
+    console.log(`Confirm: orderId=${orderId} transactionId=${transactionId} status=${status}`);
 
     const order = await db.order.findUnique({
       where: { id: orderId },
@@ -33,24 +35,30 @@ export async function POST(request: NextRequest) {
     if (order.userId !== user.userId) return error("Forbidden", 403);
 
     if (order.paymentStatus === "COMPLETED") {
+      console.log(`Order ${orderId} already COMPLETED`);
       return success({ orderId, status: "COMPLETED", isFree: Number(order.amount) === 0 });
     }
 
-    let paymentVerified = false;
+    const isFree = Number(order.amount) === 0;
 
-    if (transactionId) {
+    if (isFree) {
+      console.log(`Free event order ${orderId} — auto-completing`);
+    }
+
+    let paymentVerified = isFree;
+
+    if (!paymentVerified && transactionId) {
       try {
         const verification = await verifyTransaction(transactionId);
+        console.log(`Flutterwave verify: status=${verification.status} data_status=${verification.data?.status}`);
         paymentVerified = verification.status === "success" && verification.data?.status === "successful";
-        if (!paymentVerified) {
-          console.warn(`Flutterwave verification returned status=${verification.status} data_status=${verification.data?.status} for txn ${transactionId}`);
-        }
       } catch (e) {
         console.warn(`Flutterwave verifyTransaction threw for txn ${transactionId}:`, e);
       }
     }
 
-    if (!paymentVerified && (status === "successful" || status === "completed")) {
+    const normalizedStatus = status?.toLowerCase();
+    if (!paymentVerified && (normalizedStatus === "successful" || normalizedStatus === "completed" || normalizedStatus === "success")) {
       console.log(`Trusting payment for order ${orderId} based on status param: ${status}`);
       paymentVerified = true;
     }
@@ -61,6 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!paymentVerified) {
+      console.warn(`Payment not verified for order ${orderId}`);
       return error("Payment not confirmed — no verification data available", 400);
     }
 
@@ -130,11 +139,12 @@ export async function POST(request: NextRequest) {
       sendAppUrl,
     ).catch((e) => console.error("Email send failed:", e));
 
+    console.log(`Order ${orderId} confirmed with ${ticketCount} tickets`);
     return success({
       orderId: order.id,
       status: "COMPLETED",
       ticketCount,
-      isFree: Number(order.amount) === 0,
+      isFree,
     });
   } catch (e) {
     console.error("Payment confirm error:", e);
