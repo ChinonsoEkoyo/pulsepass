@@ -11,7 +11,10 @@ const updateEventSchema = z.object({
   dateTime: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
   recurrence: z.enum(["SINGLE", "MULTI_DAY", "WEEKLY"]).optional(),
-  recurrenceDays: z.array(z.number().int().min(0).max(6)).optional(),
+  recurrenceDays: z.union([
+    z.array(z.number().int().min(0).max(6)),
+    z.array(z.object({ day: z.number().int().min(0).max(6), time: z.string() })),
+  ]).optional(),
   isVirtual: z.boolean().optional(),
   category: z.string().min(2).optional(),
   bannerUrl: z.string().optional(),
@@ -62,13 +65,17 @@ export async function PUT(
 
     const { dateTime, endDate, recurrenceDays, ...rest } = parsed.data;
 
+    const normalizedDays = recurrenceDays !== undefined
+      ? (Array.isArray(recurrenceDays) ? recurrenceDays.map((d: number | { day: number; time: string }) => typeof d === "number" ? { day: d, time: "09:00" } : d) : [])
+      : undefined;
+
     const updated = await db.event.update({
       where: { id },
       data: {
         ...(rest as Record<string, unknown>),
         ...(dateTime ? { dateTime: new Date(dateTime) } : {}),
         ...(endDate ? { endDate: new Date(endDate) } : {}),
-        ...(recurrenceDays !== undefined ? { recurrenceDays } : {}),
+        ...(normalizedDays !== undefined ? { recurrenceDays: normalizedDays } : {}),
       },
       include: { ticketTypes: true },
     });

@@ -1,10 +1,21 @@
+type RecurrenceDayEntry = { day: number; time: string };
+
+export function normalizeRecurrenceDays(data: unknown, fallbackTime: string = "09:00"): RecurrenceDayEntry[] {
+  if (!Array.isArray(data) || data.length === 0) return [];
+  if (typeof data[0] === "number") {
+    return (data as number[]).map((d) => ({ day: d, time: fallbackTime }));
+  }
+  return data as RecurrenceDayEntry[];
+}
+
 export function getNextOccurrence(
   startDate: Date,
   endDate: Date | null,
   recurrence: string,
-  recurrenceDays: number[],
+  recurrenceDaysInput: number[] | RecurrenceDayEntry[],
 ): { date: Date; label: string } | null {
   const now = new Date();
+  const recurrenceDays = normalizeRecurrenceDays(recurrenceDaysInput, startDate.toTimeString().slice(0, 5));
 
   if (recurrence === "SINGLE") {
     if (startDate <= now) return null;
@@ -28,21 +39,23 @@ export function getNextOccurrence(
     const today = new Date(now);
     today.setHours(0, 0, 0, 0);
 
-    const nextDates: Date[] = [];
+    const nextDates: { date: Date; time: string }[] = [];
     for (let i = 0; i < 14; i++) {
       const check = new Date(today);
       check.setDate(check.getDate() + i);
       const dayOfWeek = (check.getDay() + 6) % 7;
-      if (recurrenceDays.includes(dayOfWeek)) {
-        check.setHours(startDate.getHours(), startDate.getMinutes(), 0, 0);
+      const entry = recurrenceDays.find((d) => d.day === dayOfWeek);
+      if (entry) {
+        const [h, m] = entry.time.split(":").map(Number);
+        check.setHours(h || 0, m || 0, 0, 0);
         if (check >= now) {
-          nextDates.push(check);
+          nextDates.push({ date: check, time: entry.time });
         }
       }
     }
 
     if (nextDates.length === 0) return null;
-    return { date: nextDates[0], label: "" };
+    return { date: nextDates[0].date, label: "" };
   }
 
   return null;
@@ -52,18 +65,19 @@ export function isEventUpcoming(
   startDate: Date,
   endDate: Date | null,
   recurrence: string,
-  recurrenceDays: number[],
+  recurrenceDaysInput: number[] | RecurrenceDayEntry[],
 ): boolean {
-  return getNextOccurrence(startDate, endDate, recurrence, recurrenceDays) !== null;
+  return getNextOccurrence(startDate, endDate, recurrence, recurrenceDaysInput) !== null;
 }
 
 export function formatEventDate(
   startDate: Date,
   endDate: Date | null,
   recurrence: string,
-  recurrenceDays: number[],
+  recurrenceDaysInput: number[] | RecurrenceDayEntry[],
 ): { dateText: string; timeText: string } {
-  const next = getNextOccurrence(startDate, endDate, recurrence, recurrenceDays);
+  const recurrenceDays = normalizeRecurrenceDays(recurrenceDaysInput, startDate.toTimeString().slice(0, 5));
+  const next = getNextOccurrence(startDate, endDate, recurrence, recurrenceDaysInput);
 
   if (!next) {
     return {
@@ -86,11 +100,12 @@ export function formatEventDate(
 
   if (recurrence === "WEEKLY") {
     const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const days = recurrenceDays.map((d) => dayNames[d] || "").join(", ");
-    return {
-      dateText: `Every ${days}`,
-      timeText,
-    };
+    if (recurrenceDays.length > 0 && recurrenceDays[0].time !== recurrenceDays[recurrenceDays.length - 1]?.time) {
+      const parts = recurrenceDays.map((d) => `${dayNames[d.day] || ""} ${formatTime(d.time)}`);
+      return { dateText: `Every ${parts.join(", ")}`, timeText: "" };
+    }
+    const days = recurrenceDays.map((d) => dayNames[d.day] || "").join(", ");
+    return { dateText: `Every ${days}`, timeText };
   }
 
   if (recurrence === "MULTI_DAY" && startDate < next.date) {
@@ -101,4 +116,11 @@ export function formatEventDate(
   }
 
   return { dateText, timeText };
+}
+
+function formatTime(time: string): string {
+  const [h, m] = time.split(":").map(Number);
+  const ampm = h >= 12 ? "pm" : "am";
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2, "0")}${ampm}`;
 }

@@ -360,6 +360,31 @@
   border-color: var(--color-primary);
 }
 
+/* Day schedule time inputs */
+.daySchedules {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.daySchedule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface-variant, #f5f5f7);
+  border-radius: 8px;
+}
+
+.dayScheduleLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-on-surface);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
 /* Navigation */
 .navButtons {
   display: flex;

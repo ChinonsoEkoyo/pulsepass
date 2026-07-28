@@ -17,6 +17,19 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
 
   if (!event || event.organizerId !== user.userId) notFound();
 
+  const rawRecurrenceDays = (event.recurrenceDays as unknown) || [];
+  const recurrenceDays = Array.isArray(rawRecurrenceDays)
+    ? rawRecurrenceDays.map((d: unknown) => {
+        if (typeof d === "number") {
+          return { day: d, time: new Date(event.dateTime).toTimeString().slice(0, 5) };
+        }
+        if (typeof d === "object" && d !== null && "day" in d) {
+          return d as { day: number; time: string };
+        }
+        return { day: 0, time: "09:00" };
+      })
+    : [];
+
   const eventData = {
     id: event.id,
     title: event.title,
@@ -26,7 +39,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     time: new Date(event.dateTime).toTimeString().slice(0, 5),
     endDate: event.endDate ? new Date(event.endDate).toISOString().split("T")[0] : "",
     recurrence: event.recurrence || "SINGLE",
-    recurrenceDays: (event.recurrenceDays as number[]) || [],
+    recurrenceDays,
     isVirtual: event.isVirtual ?? false,
     category: event.category,
     images: (event.images as string[]) || [],

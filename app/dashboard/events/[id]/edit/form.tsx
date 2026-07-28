@@ -17,7 +17,7 @@ interface EditEventFormProps {
     time: string;
     endDate: string;
     recurrence: string;
-    recurrenceDays: number[];
+    recurrenceDays: Array<{ day: number; time: string }>;
     isVirtual: boolean;
     category: string;
     images: string[];
@@ -51,6 +51,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
     facebook: event.facebook,
     twitter: event.twitter,
   });
+  const [formError, setFormError] = useState("");
 
   const totalImages = existingImages.filter((u) => !removedImages.includes(u)).length + newImages.length;
   const canAddMore = totalImages < 4;
@@ -87,6 +88,18 @@ export function EditEventForm({ event }: EditEventFormProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setFormError("");
+
+    if (form.title.trim().length < 2) { setFormError("Title must be at least 2 characters"); return; }
+    if (form.description.trim().length < 10) { setFormError("Description must be at least 10 characters"); return; }
+    if (form.venue.trim().length < 2) { setFormError("Venue must be at least 2 characters"); return; }
+    if (!form.date) { setFormError("Please select a date"); return; }
+    if (!form.time) { setFormError("Please select a time"); return; }
+    if (form.recurrence !== "SINGLE" && !form.endDate) { setFormError("Please select an end date"); return; }
+    if (form.recurrence === "WEEKLY" && form.recurrenceDays.length === 0) { setFormError("Please select at least one day of the week"); return; }
+    if (form.recurrence === "WEEKLY" && form.recurrenceDays.some((d) => !d.time)) { setFormError("Please set a time for each selected day"); return; }
+    if (!form.category) { setFormError("Please select a category"); return; }
+
     setLoading(true);
 
     try {
@@ -98,7 +111,12 @@ export function EditEventForm({ event }: EditEventFormProps) {
         newImages.forEach((img) => formData.append("images", img));
         const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
         const uploadJson = await uploadRes.json();
-        if (!uploadRes.ok) { alert(uploadJson.error || "Upload failed"); setLoading(false); setUploading(false); return; }
+        if (!uploadRes.ok) {
+          setFormError(uploadJson.error || "Image upload failed");
+          setLoading(false);
+          setUploading(false);
+          return;
+        }
         uploadedUrls = uploadJson.data;
         setUploading(false);
       }
@@ -109,39 +127,49 @@ export function EditEventForm({ event }: EditEventFormProps) {
       const dateTime = new Date(`${form.date}T${form.time}`).toISOString();
       const endDate = form.endDate ? new Date(`${form.endDate}T${form.time}`).toISOString() : undefined;
 
+      const body = {
+        title: form.title,
+        description: form.description,
+        venue: form.venue,
+        dateTime,
+        endDate,
+        recurrence: form.recurrence,
+        recurrenceDays: form.recurrence === "WEEKLY" ? form.recurrenceDays : undefined,
+        isVirtual: form.isVirtual,
+        category: form.category,
+        images: allImages,
+        instagram: form.instagram || undefined,
+        facebook: form.facebook || undefined,
+        twitter: form.twitter || undefined,
+        status: "PUBLISHED",
+      };
+      console.log("Edit event submit body:", body);
+
       const res = await fetch(`/api/events/${event.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: form.title,
-          description: form.description,
-          venue: form.venue,
-          dateTime,
-          endDate,
-          recurrence: form.recurrence,
-          recurrenceDays: form.recurrence === "WEEKLY" ? form.recurrenceDays : undefined,
-          isVirtual: form.isVirtual,
-          category: form.category,
-          images: allImages,
-          instagram: form.instagram || undefined,
-          facebook: form.facebook || undefined,
-          twitter: form.twitter || undefined,
-        }),
+        body: JSON.stringify(body),
       });
 
       const json = await res.json();
-      if (!res.ok) { alert(json.error || "Failed to update"); return; }
+      console.log("Edit event response:", res.status, json);
+
+      if (!res.ok) {
+        setFormError(json.error || "Failed to update event");
+        return;
+      }
 
       router.push("/dashboard/events");
       router.refresh();
-    } catch {
-      alert("Something went wrong");
+    } catch (err) {
+      console.error("Edit event submit error:", err);
+      setFormError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  function update(field: string, value: string | boolean | number[]) {
+  function update(field: string, value: string | boolean | number[] | Array<{ day: number; time: string }>) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
@@ -155,7 +183,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
           <div className={styles.imageGrid}>
             {visibleExisting.map((url, i) => (
               <div className={styles.imagePreview} key={`ex-${i}`}>
-                <Image src={url} alt="" width={140} height={100} style={{ objectFit: "cover", borderRadius: 8 }} />
+                <Image src={url} alt="" fill style={{ objectFit: "cover" }} sizes="150px" />
                 <button type="button" className={styles.removeImage} onClick={() => removeExisting(i)}>
                   <X size={14} />
                 </button>
@@ -163,7 +191,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
             ))}
             {newPreviews.map((preview, i) => (
               <div className={styles.imagePreview} key={`new-${i}`}>
-                <Image src={preview} alt="" width={140} height={100} style={{ objectFit: "cover", borderRadius: 8 }} />
+                <Image src={preview} alt="" fill style={{ objectFit: "cover" }} sizes="150px" />
                 <button type="button" className={styles.removeImage} onClick={() => removeNew(i)}>
                   <X size={14} />
                 </button>
@@ -301,16 +329,18 @@ export function EditEventForm({ event }: EditEventFormProps) {
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, i) => (
                   <label
                     key={day}
-                    className={`${styles.dayChip} ${form.recurrenceDays.includes(i) ? styles.dayChipActive : ""}`}
+                    className={`${styles.dayChip} ${form.recurrenceDays.some((d) => d.day === i) ? styles.dayChipActive : ""}`}
                   >
                     <input
                       type="checkbox"
-                      checked={form.recurrenceDays.includes(i)}
+                      checked={form.recurrenceDays.some((d) => d.day === i)}
                       onChange={() => {
-                        const days = form.recurrenceDays.includes(i)
-                          ? form.recurrenceDays.filter((d) => d !== i)
-                          : [...form.recurrenceDays, i];
-                        update("recurrenceDays", days);
+                        const exists = form.recurrenceDays.find((d) => d.day === i);
+                        if (exists) {
+                          update("recurrenceDays", form.recurrenceDays.filter((d) => d.day !== i));
+                        } else {
+                          update("recurrenceDays", [...form.recurrenceDays, { day: i, time: form.time || "09:00" }]);
+                        }
                       }}
                       style={{ display: "none" }}
                     />
@@ -318,14 +348,26 @@ export function EditEventForm({ event }: EditEventFormProps) {
                   </label>
                 ))}
               </div>
+              {form.recurrenceDays.length > 0 && (
+                <div className={styles.daySchedules}>
+                  {form.recurrenceDays.map((entry) => (
+                    <div key={entry.day} className={styles.daySchedule}>
+                      <span className={styles.dayScheduleLabel}>{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][entry.day]}</span>
+                      <Input
+                        type="time"
+                        value={entry.time}
+                        onChange={(e) => {
+                          update("recurrenceDays", form.recurrenceDays.map((d) =>
+                            d.day === entry.day ? { ...d, time: e.target.value } : d
+                          ));
+                        }}
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <Input
-              label="Time"
-              type="time"
-              value={form.time}
-              onChange={(e) => update("time", e.target.value)}
-              required
-            />
           </>
         ) : form.recurrence !== "SINGLE" ? (
           <Input
@@ -366,6 +408,19 @@ export function EditEventForm({ event }: EditEventFormProps) {
             placeholder="https://x.com/your-handle"
           />
         </div>
+
+        {formError && (
+          <div style={{
+            padding: "0.75rem 1rem",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fecaca",
+            borderRadius: 8,
+            color: "#b91c1c",
+            fontSize: "0.875rem",
+          }}>
+            {formError}
+          </div>
+        )}
 
         <div className={styles.actions}>
           <Button type="submit" loading={loading || uploading} size="lg">

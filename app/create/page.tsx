@@ -46,7 +46,7 @@ export default function CreateEventPage() {
     time: "",
     endDate: "",
     recurrence: "SINGLE",
-    recurrenceDays: [] as number[],
+    recurrenceDays: [] as Array<{ day: number; time: string }>,
     isVirtual: false,
     instagram: "",
     facebook: "",
@@ -82,7 +82,7 @@ export default function CreateEventPage() {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   }
 
-  function update(field: string, value: string | boolean | number[]) {
+  function update(field: string, value: string | boolean | number[] | Array<{ day: number; time: string }>) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
@@ -117,6 +117,7 @@ export default function CreateEventPage() {
         if (!form.time) { alert("Please select a time"); return false; }
         if (form.recurrence !== "SINGLE" && !form.endDate) { alert("Please select an end date"); return false; }
         if (form.recurrence === "WEEKLY" && form.recurrenceDays.length === 0) { alert("Please select at least one day of the week"); return false; }
+        if (form.recurrence === "WEEKLY" && form.recurrenceDays.some((d) => !d.time)) { alert("Please set a time for each selected day"); return false; }
         return true;
       case 3: {
         const valid = ticketTypes.filter((t) => t.name.trim() && t.quantity >= 1);
@@ -180,7 +181,7 @@ export default function CreateEventPage() {
           dateTime,
           endDate,
           recurrence: form.recurrence,
-          recurrenceDays: form.recurrence === "WEEKLY" ? form.recurrenceDays : undefined,
+          recurrenceDays: form.recurrence === "WEEKLY" && form.recurrenceDays.length > 0 ? form.recurrenceDays : undefined,
           isVirtual: form.isVirtual,
           category: form.category,
           images: imageUrls,
@@ -366,16 +367,18 @@ export default function CreateEventPage() {
                     {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, i) => (
                       <label
                         key={day}
-                        className={`${styles.dayChip} ${form.recurrenceDays.includes(i) ? styles.dayChipActive : ""}`}
+                        className={`${styles.dayChip} ${form.recurrenceDays.some((d) => d.day === i) ? styles.dayChipActive : ""}`}
                       >
                         <input
                           type="checkbox"
-                          checked={form.recurrenceDays.includes(i)}
+                          checked={form.recurrenceDays.some((d) => d.day === i)}
                           onChange={() => {
-                            const days = form.recurrenceDays.includes(i)
-                              ? form.recurrenceDays.filter((d) => d !== i)
-                              : [...form.recurrenceDays, i];
-                            update("recurrenceDays", days);
+                            const exists = form.recurrenceDays.find((d) => d.day === i);
+                            if (exists) {
+                              update("recurrenceDays", form.recurrenceDays.filter((d) => d.day !== i));
+                            } else {
+                              update("recurrenceDays", [...form.recurrenceDays, { day: i, time: form.time || "09:00" }]);
+                            }
                           }}
                           style={{ display: "none" }}
                         />
@@ -383,6 +386,25 @@ export default function CreateEventPage() {
                       </label>
                     ))}
                   </div>
+                  {form.recurrenceDays.length > 0 && (
+                    <div className={styles.daySchedules}>
+                      {form.recurrenceDays.map((entry) => (
+                        <div key={entry.day} className={styles.daySchedule}>
+                          <span className={styles.dayScheduleLabel}>{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][entry.day]}</span>
+                          <Input
+                            type="time"
+                            value={entry.time}
+                            onChange={(e) => {
+                              update("recurrenceDays", form.recurrenceDays.map((d) =>
+                                d.day === entry.day ? { ...d, time: e.target.value } : d
+                              ));
+                            }}
+                            required
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : null}
 
